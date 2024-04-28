@@ -7,7 +7,9 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "prettier": "prettier --write 'src/**/*.{ts,astro,scss}'",
+    "eslint": "eslint --fix 'src/**/*.{ts,tsx,astro}'"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.10",
@@ -17,5 +19,17 @@
     "astro": "^4.7.0",
     "microcms-js-sdk": "^3.1.1",
     "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.0.2",
+    "@eslint/js": "^9.1.1",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "eslint": "^9.1.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-astro": "^1.0.3",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-astro": "^0.13.0"
   }
 }
