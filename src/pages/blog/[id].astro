@@ -1,0 +1,33 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getBlogDetail, getBlogs } from '../../lib/microcms';
+
+export async function getStaticPaths() {
+	const response = await getBlogs({fields:['id']});
+	return response.contents.map((content) => ({ params: { id: content.id } }));
+}
+
+const {id} = Astro.params
+const blog = await getBlogDetail(id)
+
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>{blog.title}</h1>
+			<p>公開日時:{blog.publishedAt}</p>
+			<div set:html={blog.body}/>
+		</main>
+		<Footer />
+	</body>
+</html>
+
