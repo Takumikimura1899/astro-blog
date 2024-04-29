@@ -7,7 +7,7 @@ const response = await getBlogs({ fields: ["id", "title", "publishedAt"] });
 
 <BaseLayout>
   <main>
-    <h1>Blogの一覧</h1>
+    <h1>一覧</h1>
     <ul class="grid-container">
       {
         response.contents.map((blog) => (
