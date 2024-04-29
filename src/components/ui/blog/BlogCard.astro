@@ -1,0 +1,31 @@
+---
+import type { Blog } from "@/types/blog.types";
+import { getFormattedYearMonthDay } from "@/utils/helper/getFormattedYearMonthDay";
+type Props = Blog;
+const { id, title, publishedAt } = Astro.props;
+const date = getFormattedYearMonthDay(publishedAt);
+---
+
+<div class="card">
+  <a href=`/blog/${id}`>
+    <h3>{title}</h3>
+  </a>
+  <p>公開日時:{date}</p>
+</div>
+
+<style scoped>
+  a {
+    color: inherit;
+    font-size: 0.7rem;
+  }
+  a:hover {
+    color: gray;
+    text-decoration: none;
+  }
+
+  .card {
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+  }
+</style>

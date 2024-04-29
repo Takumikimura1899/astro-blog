@@ -1,19 +1,36 @@
 ---
 import { getBlogs } from "@/lib/microcms";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-const response = await getBlogs({ fields: ["id", "title"] });
+import BlogCard from "@/components/ui/blog/BlogCard.astro";
+const response = await getBlogs({ fields: ["id", "title", "publishedAt"] });
 ---
 
 <BaseLayout>
   <main>
-    <ul>
+    <h1>Blogの一覧</h1>
+    <ul class="grid-container">
       {
         response.contents.map((blog) => (
           <li>
-            <a href={`/blog/${blog.id}`}>{blog.title}</a>
+            <BlogCard {...blog} />
           </li>
         ))
       }
     </ul>
   </main>
 </BaseLayout>
+
+<style scoped>
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .grid-container li {
+  }
+</style>
