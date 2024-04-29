@@ -1,6 +1,6 @@
 ---
-import { getLatestBlog } from "../lib/microcms";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import { getLatestBlog } from "@/lib/microcms";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 const response = await getLatestBlog();
 console.log(response);
 ---

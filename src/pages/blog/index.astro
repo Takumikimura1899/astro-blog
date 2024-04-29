@@ -1,6 +1,6 @@
 ---
-import { getBlogs } from "../../lib/microcms";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getBlogs } from "@/lib/microcms";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 const response = await getBlogs({ fields: ["id", "title"] });
 ---
 
