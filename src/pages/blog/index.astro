@@ -1,0 +1,19 @@
+---
+import { getBlogs } from "../../lib/microcms";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+const response = await getBlogs({ fields: ["id", "title"] });
+---
+
+<BaseLayout>
+  <main>
+    <ul>
+      {
+        response.contents.map((blog) => (
+          <li>
+            <a href={`/blog/${blog.id}`}>{blog.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</BaseLayout>
