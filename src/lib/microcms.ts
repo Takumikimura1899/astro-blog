@@ -1,19 +1,10 @@
 import type { MicroCMSQueries } from "microcms-js-sdk";
 import { createClient } from "microcms-js-sdk";
+import type { Blog } from "@/types/blog.types";
 
 const ENDPOINTS = {
   blog: "blog",
 } as const;
-
-export type Blog = {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  publishedAt: string;
-  revisedAt: string;
-  title: string;
-  body: string;
-};
 
 export type BlogResponse = {
   totalCount: number;
