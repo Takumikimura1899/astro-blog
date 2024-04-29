@@ -18,6 +18,8 @@
     "@astrojs/sitemap": "^3.1.4",
     "@formkit/tempo": "^0.1.1",
     "astro": "^4.7.0",
+    "cheerio": "^1.0.0-rc.12",
+    "highlight.js": "^11.9.0",
     "microcms-js-sdk": "^3.1.1",
     "typescript": "^5.4.5"
   },
