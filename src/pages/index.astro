@@ -1,19 +1,21 @@
 ---
-import { getBlogs } from "../lib/microcms";
+import { getLatestBlog } from "../lib/microcms";
 import BaseLayout from "../layouts/BaseLayout.astro";
-const response = await getBlogs({ fields: ["id", "title"] });
+const response = await getLatestBlog();
+console.log(response);
 ---
 
 <BaseLayout>
   <main>
-    <ul>
-      {
-        response.contents.map((blog) => (
-          <li>
-            <a href={`/blog/${blog.id}`}>{blog.title}</a>
-          </li>
-        ))
-      }
-    </ul>
+    <h1>Blog<span class="small">(最新の投稿)</span></h1>
+    <a href=`/blog/${response.id}`>リンク</a>
   </main>
 </BaseLayout>
+
+```
+
+<style scoped>
+  .small {
+    font-size: 0.8em;
+  }
+</style>
