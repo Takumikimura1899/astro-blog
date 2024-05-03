@@ -5,6 +5,7 @@ import { getFormattedYearMonthDay } from "@/utils/helper/getFormattedYearMonthDa
 import hljs, { type HighlightResult } from "highlight.js";
 import { load } from "cheerio";
 import "highlight.js/styles/a11y-dark.css";
+import CategoryBadge from "@/components/ui/blog/CategoryBadge.astro";
 
 export async function getStaticPaths() {
   const response = await getBlogs({ fields: ["id"] });
@@ -43,7 +44,24 @@ blog.body = $.html();
 <BaseLayout>
   <main>
     <h1>{blog.title}</h1>
-    <p>公開日時:{getFormattedYearMonthDay(blog.publishedAt)}</p>
+    <div class="flex">
+      <div>
+        <div>
+          {blog.category && <CategoryBadge {...blog.category} />}
+          {blog.category2 && <CategoryBadge {...blog.category2} />}
+        </div>
+      </div>
+      <p>公開日時:{getFormattedYearMonthDay(blog.publishedAt)}</p>
+    </div>
     <div set:html={blog.body} />
   </main>
 </BaseLayout>
+
+<style>
+  .flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+</style>

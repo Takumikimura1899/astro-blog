@@ -1,8 +1,9 @@
 ---
 import type { Blog } from "@/types/blog.types";
 import { getFormattedYearMonthDay } from "@/utils/helper/getFormattedYearMonthDay";
+import CategoryBadge from "./CategoryBadge.astro";
 type Props = Blog;
-const { id, title, publishedAt } = Astro.props;
+const { id, title, category, category2, publishedAt } = Astro.props;
 const date = getFormattedYearMonthDay(publishedAt);
 ---
 
@@ -10,10 +11,14 @@ const date = getFormattedYearMonthDay(publishedAt);
   <a href=`/blog/${id}`>
     <h2>{title}</h2>
   </a>
+  <div>
+    {category && <CategoryBadge {...category} />}
+    {category2 && <CategoryBadge {...category2} />}
+  </div>
   <p>公開日時:{date}</p>
 </div>
 
-<style scoped>
+<style>
   h2 {
     font-size: 1.2rem;
   }

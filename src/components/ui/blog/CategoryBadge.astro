@@ -1,0 +1,61 @@
+---
+import type { Category } from "@/types/blog.types";
+
+type Props = Category;
+const { name } = Astro.props;
+if (!name) {
+  return;
+}
+
+const FRONT_END = [
+  "JavaScript",
+  "React",
+  "Next.js",
+  "TypeScript",
+  "TailwindCSS",
+  "Astro",
+] as const;
+const BACK_END = ["Node.js", "Nest.js", "Prisma", "Go"] as const;
+const TOOLS = ["Github", "Git", "Docker", "Vercel", "Cloudflare"] as const;
+
+const makeClass = (label: typeof name) => {
+  if (FRONT_END.some((item) => item === label)) {
+    return "bg-yellow-500";
+  }
+  if (BACK_END.some((item) => item === label)) {
+    return "bg-blue-500";
+  }
+  if (TOOLS.some((item) => item === label)) {
+    return "bg-green-500";
+  }
+  return "bg-gray-500";
+};
+---
+
+<div class={`${makeClass(name)}`}>
+  {name}
+</div>
+
+<style>
+  .bg-yellow-500 {
+    background-color: #f59e0b;
+  }
+  .bg-blue-500 {
+    background-color: #2563eb;
+  }
+  .bg-green-500 {
+    background-color: #10b981;
+  }
+  .bg-gray-500 {
+    background-color: #6b7280;
+  }
+  div {
+    font-family: Arial, Helvetica, sans-serif;
+    display: inline-block;
+    padding: 0.2rem 0.3rem;
+    line-height: 1.2;
+    border-radius: 0.25rem;
+    color: white;
+    font-size: 0.75rem;
+  }
+</style>

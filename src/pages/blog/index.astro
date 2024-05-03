@@ -2,7 +2,9 @@
 import { getBlogs } from "@/lib/microcms";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlogCard from "@/components/ui/blog/BlogCard.astro";
-const response = await getBlogs({ fields: ["id", "title", "publishedAt"] });
+const response = await getBlogs({
+  fields: ["id", "title", "category", "category2", "publishedAt"],
+});
 ---
 
 <BaseLayout>
