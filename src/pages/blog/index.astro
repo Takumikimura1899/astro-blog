@@ -22,7 +22,7 @@ const response = await getBlogs({
   </main>
 </BaseLayout>
 
-<style scoped>
+<style>
   ul {
     list-style: none;
     padding-left: 0;
@@ -33,6 +33,9 @@ const response = await getBlogs({
     gap: 1rem;
   }
 
-  .grid-container li {
+  @media (width < 768px) {
+    .grid-container {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

@@ -11,11 +11,13 @@ const date = getFormattedYearMonthDay(publishedAt);
   <a href=`/blog/${id}`>
     <h2>{title}</h2>
   </a>
-  <div>
-    {category && <CategoryBadge {...category} />}
-    {category2 && <CategoryBadge {...category2} />}
+  <div class="flex">
+    <div>
+      {category && <CategoryBadge {...category} />}
+      {category2 && <CategoryBadge {...category2} />}
+    </div>
+    <p>{date}</p>
   </div>
-  <p>公開日時:{date}</p>
 </div>
 
 <style>
@@ -30,9 +32,19 @@ const date = getFormattedYearMonthDay(publishedAt);
     text-decoration: none;
   }
 
+  p {
+    margin: 0;
+  }
+
   .card {
     padding: 1rem;
     border: 1px solid #ccc;
     border-radius: 0.5rem;
+  }
+
+  .flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>
