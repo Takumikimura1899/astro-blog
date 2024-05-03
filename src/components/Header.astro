@@ -1,6 +1,7 @@
 ---
 import HeaderLink from "@/components/HeaderLink.astro";
 import { SITE_TITLE } from "@/consts";
+import ThemeIcon from "./ThemeIcon.astro";
 ---
 
 <header>
@@ -29,6 +30,7 @@ import { SITE_TITLE } from "@/consts";
           ></path></svg
         >
       </a>
+      <ThemeIcon />
     </div>
   </nav>
 </header>
@@ -39,6 +41,7 @@ import { SITE_TITLE } from "@/consts";
     background: white;
     box-shadow: 0 2px 8px rgba(var(--black), 5%);
   }
+
   h2 {
     margin: 0;
     font-size: 1em;
@@ -71,5 +74,18 @@ import { SITE_TITLE } from "@/consts";
     .social-links {
       display: none;
     }
+  }
+
+  html.dark body header {
+    background: rgb(var(--black));
+    color: rgb(var(--gray-light));
+  }
+
+  html.dark nav a {
+    color: rgb(var(--gray-light));
+  }
+
+  html.dark nav a.active {
+    border-bottom-color: var(--accent-dark);
   }
 </style>
