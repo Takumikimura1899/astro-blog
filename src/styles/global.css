@@ -169,3 +169,7 @@ html.dark body {
   background: #1a202c;
   color: rgb(var(--gray-light));
 }
+
+html.dark code {
+  background-color: #2d3748;
+}
