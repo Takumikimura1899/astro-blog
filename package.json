@@ -18,6 +18,7 @@
     "@astrojs/sitemap": "^3.1.4",
     "@formkit/tempo": "^0.1.1",
     "astro": "^4.7.0",
+    "astro-icon": "^1.1.0",
     "cheerio": "^1.0.0-rc.12",
     "highlight.js": "^11.9.0",
     "microcms-js-sdk": "^3.1.1",
@@ -26,6 +27,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.2",
     "@eslint/js": "^9.1.1",
+    "@iconify-json/ri": "^1.1.20",
+    "@iconify-json/simple-icons": "^1.1.101",
     "@typescript-eslint/eslint-plugin": "^7.7.1",
     "@typescript-eslint/parser": "^7.7.1",
     "eslint": "^9.1.1",
