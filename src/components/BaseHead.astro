@@ -57,12 +57,13 @@ const { title, description, image = "/blog-placeholder-1.jpg" } = Astro.props;
 <script
   is:inline
   async
+  type="text/partytown"
   src=`https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`></script>
-<script is:inline async define:vars={{ gaTrackingId }}>
+<script is:inline async type="text/partytown" define:vars={{ gaTrackingId }}>
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     dataLayer.push(arguments);
   }
   gtag("js", new Date());
-  gtag("config", gaTrackingId);
+  gtag("config", `${gaTrackingId}`);
 </script>
