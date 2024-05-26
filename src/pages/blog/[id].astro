@@ -1,44 +1,44 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import { getBlogDetail, getBlogs } from '@/lib/microcms'
-import { getFormattedYearMonthDay } from '@/utils/helper/getFormattedYearMonthDay'
-import hljs, { type HighlightResult } from 'highlight.js'
-import { load } from 'cheerio'
-import 'highlight.js/styles/a11y-dark.css'
-import CategoryBadge from '@/components/ui/blog/CategoryBadge.astro'
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getBlogDetail, getBlogs } from "@/lib/microcms";
+import { getFormattedYearMonthDay } from "@/utils/helper/getFormattedYearMonthDay";
+import hljs, { type HighlightResult } from "highlight.js";
+import { load } from "cheerio";
+import "highlight.js/styles/a11y-dark.css";
+import CategoryBadge from "@/components/ui/blog/CategoryBadge.astro";
 
 export async function getStaticPaths() {
-  const response = await getBlogs({ fields: ['id'] })
-  return response.contents.map((content) => ({ params: { id: content.id } }))
+  const response = await getBlogs({ fields: ["id"] });
+  return response.contents.map((content) => ({ params: { id: content.id } }));
 }
 
-const { id } = Astro.params
-const blog = await getBlogDetail(id)
+const { id } = Astro.params;
+const blog = await getBlogDetail(id);
 
-const $ = load(blog.body)
+const $ = load(blog.body);
 
-$('div[data-filename]').each((_, element) => {
-  $(element).prepend(`<span>${$(element).attr('data-filename')}</span>`)
-})
+$("div[data-filename]").each((_, element) => {
+  $(element).prepend(`<span>${$(element).attr("data-filename")}</span>`);
+});
 
-$('pre code').each((_, element) => {
-  const language = $(element).attr('class') || ''
-  let result: HighlightResult
+$("pre code").each((_, element) => {
+  const language = $(element).attr("class") || "";
+  let result: HighlightResult;
 
-  if (language == '') {
+  if (language === "") {
     // 言語が入力なしの場合、自動判定
-    result = hljs.highlightAuto($(element).text())
+    result = hljs.highlightAuto($(element).text());
   } else {
     // 言語が入力ありの場合、入力された言語で判定
     result = hljs.highlight($(element).text(), {
-      language: language.replace('language-', ''),
-    })
+      language: language.replace("language-", ""),
+    });
   }
-  $(element).html(result.value)
-  $(element).addClass('hljs')
-})
+  $(element).html(result.value);
+  $(element).addClass("hljs");
+});
 
-blog.body = $.html()
+blog.body = $.html();
 ---
 
 <BaseLayout>
