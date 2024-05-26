@@ -1,14 +1,14 @@
 ---
-import { getBlogs } from '@/lib/microcms'
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import BlogCard from '@/components/ui/blog/BlogCard.astro'
+import { getBlogs } from "@/lib/microcms";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import BlogCard from "@/components/ui/blog/BlogCard.astro";
 const response = await getBlogs({
-  fields: ['id', 'title', 'category', 'category2', 'publishedAt'],
-})
+  fields: ["id", "title", "category", "category2", "publishedAt"],
+});
 ---
 
 <BaseLayout>
-  <main>
+  <main class="container">
     <h1>一覧</h1>
     <ul class="grid-container">
       {

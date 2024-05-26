@@ -1,4 +1,6 @@
 ---
+import { cn } from "@/lib/utils";
+
 const { href, class: className, ...props } = Astro.props;
 
 const { pathname } = Astro.url;
@@ -6,16 +8,13 @@ const subpath = pathname.match(/[^/]+/g);
 const isActive = href === pathname || href === `/${subpath?.[0]}`;
 ---
 
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
+<a
+  href={href}
+  class={cn(
+    "inline-block no-underline",
+    isActive &&
+      "font-semibold underline underline-offset-8 decoration-accent-foreground",
+  )}
+>
   <slot />
 </a>
-<style>
-  a {
-    display: inline-block;
-    text-decoration: none;
-  }
-  a.active {
-    font-weight: bolder;
-    text-decoration: underline;
-  }
-</style>

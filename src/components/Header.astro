@@ -1,87 +1,38 @@
 ---
-import HeaderLink from '@/components/HeaderLink.astro'
-import { SITE_TITLE } from '@/consts'
-import ThemeIcon from './ThemeIcon.astro'
-import { SNS_LINKS } from '@/constants/SnsLink'
-import { Icon } from 'astro-icon/components'
+import HeaderLink from "@/components/HeaderLink.astro";
+import { SITE_TITLE } from "@/consts";
+import { SNS_LINKS } from "@/constants/SnsLink";
+import { Icon } from "astro-icon/components";
+import { ModeToggle } from "@/components/ModeToggle";
 ---
 
 <header>
-  <nav>
-    <h2><a href="/">{SITE_TITLE}</a></h2>
-    <div class="internal-links">
+  <nav
+    class="flex mb-4 justify-between h-12 items-center container bg-clip-padding bg-slate-200 dark:bg-slate-900"
+  >
+    <h2 class="text-xl font-bold">
+      <a href="/" class="no-underline">{SITE_TITLE}</a>
+    </h2>
+    <div class="items-center text-lg font-semibold space-x-2">
       <HeaderLink href="/">Home</HeaderLink>
       <HeaderLink href="/blog">Blog</HeaderLink>
     </div>
-    <div class="social-links">
-      <a href={SNS_LINKS.twitter} target="_blank">
-        <span class="sr-only">x</span>
-        <Icon size={30} name="ri:twitter-x-fill" />
-      </a>
-      <a href={SNS_LINKS.github} target="_blank">
-        <span class="sr-only">github</span>
-        <Icon size={30} name="ri:github-fill" />
-      </a>
-      <a href={SNS_LINKS.zenn} target="_blank">
-        <span class="sr-only">zenn</span>
-        <Icon size={30} name="simple-icons:zenn" />
-      </a>
-      <ThemeIcon />
+    <div class="flex items-center gap-2">
+      <div class="hidden md:flex gap-2">
+        <a href={SNS_LINKS.twitter} target="_blank">
+          <span class="sr-only">x</span>
+          <Icon size={30} name="ri:twitter-x-fill" />
+        </a>
+        <a href={SNS_LINKS.github} target="_blank">
+          <span class="sr-only">github</span>
+          <Icon size={30} name="ri:github-fill" />
+        </a>
+        <a href={SNS_LINKS.zenn} target="_blank">
+          <span class="sr-only">zenn</span>
+          <Icon size={30} name="simple-icons:zenn" />
+        </a>
+      </div>
+      <ModeToggle client:load />
     </div>
   </nav>
 </header>
-<style>
-  header {
-    margin: 0;
-    padding: 0 1em;
-    background: white;
-    box-shadow: 0 2px 8px rgba(var(--black), 5%);
-  }
-
-  h2 {
-    margin: 0;
-    font-size: 1em;
-  }
-
-  h2 a,
-  h2 a.active {
-    text-decoration: none;
-  }
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  nav a {
-    padding: 1em 0.5em;
-    color: var(--black);
-    border-bottom: 4px solid transparent;
-    text-decoration: none;
-  }
-  nav a.active {
-    text-decoration: none;
-    border-bottom-color: var(--accent);
-  }
-  .social-links,
-  .social-links a {
-    display: flex;
-  }
-  @media (max-width: 720px) {
-    .social-links {
-      display: none;
-    }
-  }
-
-  html.dark body header {
-    background: rgb(var(--black));
-    color: rgb(var(--gray-light));
-  }
-
-  html.dark nav a {
-    color: rgb(var(--gray-light));
-  }
-
-  html.dark nav a.active {
-    border-bottom-color: var(--accent-dark);
-  }
-</style>

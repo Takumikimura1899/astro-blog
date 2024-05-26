@@ -1,12 +1,12 @@
 ---
-import { getLatestBlog } from '@/lib/microcms'
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import BlogCard from '@/components/ui/blog/BlogCard.astro'
-const response = await getLatestBlog()
+import { getLatestBlog } from "@/lib/microcms";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import BlogCard from "@/components/ui/blog/BlogCard.astro";
+const response = await getLatestBlog();
 ---
 
 <BaseLayout>
-  <main>
+  <main class="container">
     <h1>Blog<span class="small">(最新の投稿)</span></h1>
     <BlogCard {...response} />
   </main>
