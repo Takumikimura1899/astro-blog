@@ -1,8 +1,8 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+import BaseHead from '../components/BaseHead.astro'
+import Footer from '../components/Footer.astro'
+import Header from '../components/Header.astro'
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts'
 ---
 
 <!doctype html>
@@ -12,32 +12,34 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
   </head>
   <body>
     <Header />
-    <slot />
+    <div class="container">
+      <slot />
+    </div>
     <Footer />
     <script is:inline>
       const getThemePreference = () => {
         if (
-          typeof localStorage !== "undefined" &&
-          localStorage.getItem("theme")
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
         ) {
-          return localStorage.getItem("theme");
+          return localStorage.getItem('theme')
         }
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-      };
-      const isDark = getThemePreference() === "dark";
-      document.documentElement.classList[isDark ? "add" : "remove"]("dark");
+        return window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+      }
+      const isDark = getThemePreference() === 'dark'
+      document.documentElement.classList[isDark ? 'add' : 'remove']('dark')
 
-      if (typeof localStorage !== "undefined") {
+      if (typeof localStorage !== 'undefined') {
         const observer = new MutationObserver(() => {
-          const isDark = document.documentElement.classList.contains("dark");
-          localStorage.setItem("theme", isDark ? "dark" : "light");
-        });
+          const isDark = document.documentElement.classList.contains('dark')
+          localStorage.setItem('theme', isDark ? 'dark' : 'light')
+        })
         observer.observe(document.documentElement, {
           attributes: true,
-          attributeFilter: ["class"],
-        });
+          attributeFilter: ['class'],
+        })
       }
     </script>
   </body>

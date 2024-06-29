@@ -1,38 +1,40 @@
 ---
-import HeaderLink from "@/components/HeaderLink.astro";
-import { SITE_TITLE } from "@/consts";
-import { SNS_LINKS } from "@/constants/SnsLink";
-import { Icon } from "astro-icon/components";
-import { ModeToggle } from "@/components/ModeToggle";
+import HeaderLink from '@/components/HeaderLink.astro'
+import { SITE_TITLE } from '@/consts'
+import { SNS_LINKS } from '@/constants/SnsLink'
+import { Icon } from 'astro-icon/components'
+import { ModeToggle } from '@/components/ModeToggle'
 ---
 
 <header>
-  <nav
-    class="flex mb-4 justify-between h-12 items-center container bg-clip-padding bg-slate-200 dark:bg-slate-900"
-  >
-    <h2 class="text-xl font-bold">
-      <a href="/" class="no-underline">{SITE_TITLE}</a>
-    </h2>
-    <div class="items-center text-lg font-semibold space-x-2">
-      <HeaderLink href="/">Home</HeaderLink>
-      <HeaderLink href="/blog">Blog</HeaderLink>
-    </div>
-    <div class="flex items-center gap-2">
-      <div class="hidden md:flex gap-2">
-        <a href={SNS_LINKS.twitter} target="_blank">
-          <span class="sr-only">x</span>
-          <Icon size={30} name="ri:twitter-x-fill" />
-        </a>
-        <a href={SNS_LINKS.github} target="_blank">
-          <span class="sr-only">github</span>
-          <Icon size={30} name="ri:github-fill" />
-        </a>
-        <a href={SNS_LINKS.zenn} target="_blank">
-          <span class="sr-only">zenn</span>
-          <Icon size={30} name="simple-icons:zenn" />
-        </a>
+  <nav class="mb-4 justify-between h-12 bg-slate-200 dark:bg-slate-900">
+    <div
+      class="container h-full flex justify-between items-center bg-clip-padding"
+    >
+      <h2 class="text-xl font-bold">
+        <a href="/" class="no-underline">{SITE_TITLE}</a>
+      </h2>
+      <div class="items-center text-lg font-semibold space-x-2">
+        <HeaderLink href="/">Home</HeaderLink>
+        <HeaderLink href="/blog">Blog</HeaderLink>
       </div>
-      <ModeToggle client:load />
+      <div class="flex items-center gap-2">
+        <div class="hidden md:flex gap-2">
+          <a href={SNS_LINKS.twitter} target="_blank">
+            <span class="sr-only">x</span>
+            <Icon size={30} name="ri:twitter-x-fill" />
+          </a>
+          <a href={SNS_LINKS.github} target="_blank">
+            <span class="sr-only">github</span>
+            <Icon size={30} name="ri:github-fill" />
+          </a>
+          <a href={SNS_LINKS.zenn} target="_blank">
+            <span class="sr-only">zenn</span>
+            <Icon size={30} name="simple-icons:zenn" />
+          </a>
+        </div>
+        <ModeToggle client:load />
+      </div>
     </div>
   </nav>
 </header>
