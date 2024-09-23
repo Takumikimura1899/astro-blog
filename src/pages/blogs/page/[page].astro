@@ -77,7 +77,9 @@ const paginationLinks = makePaginationLinks(page)
         {
           !isFirstPage && (
             <PaginationItem>
-              <PaginationPrevious href={`${Number.parseInt(page) - 1}`} />
+              <PaginationPrevious
+                href={`blogs/page/${Number.parseInt(page) - 1}`}
+              />
             </PaginationItem>
           )
         }
@@ -85,7 +87,7 @@ const paginationLinks = makePaginationLinks(page)
           Number.parseInt(page) - PAGINATION_OFFSET > 1 && (
             <>
               <PaginationItem>
-                <PaginationLink href="1">1</PaginationLink>
+                <PaginationLink href="blogs/page/1">1</PaginationLink>
               </PaginationItem>
               <PaginationItem>
                 <PaginationEllipsis />
@@ -114,9 +116,9 @@ const paginationLinks = makePaginationLinks(page)
               </PaginationItem>
               <PaginationItem>
                 <PaginationLink
-                  href={Math.ceil(
+                  href={`blogs/page/${Math.ceil(
                     response.totalCount / BLOG_INITIALIZE.perPage,
-                  ).toString()}
+                  ).toString()}`}
                 >
                   {Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage)}
                 </PaginationLink>
@@ -127,7 +129,9 @@ const paginationLinks = makePaginationLinks(page)
         {
           !isLastPage && (
             <PaginationItem>
-              <PaginationNext href={`${Number.parseInt(page) + 1}`} />
+              <PaginationNext
+                href={`/blogs/page/${Number.parseInt(page) + 1}`}
+              />
             </PaginationItem>
           )
         }
