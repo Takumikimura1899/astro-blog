@@ -33,6 +33,8 @@ const response = await getBlogs({
 const isFirstPage = page === '1'
 const isLastPage =
   page === Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage).toString()
+const previousPageLink = isFirstPage ? null : `${Number.parseInt(page) - 1}`
+const nextPageLink = isLastPage ? null : `${Number.parseInt(page) + 1}`
 ---
 
 <BaseLayout>
@@ -56,12 +58,32 @@ const isLastPage =
             </PaginationItem>
           )
         }
+        {
+          previousPageLink && (
+            <PaginationItem>
+              <PaginationLink href={`${previousPageLink}`}>
+                {previousPageLink}
+              </PaginationLink>
+            </PaginationItem>
+          )
+        }
         <PaginationItem>
-          {page}
+          <PaginationLink isActive aria-disabled>
+            {page}
+          </PaginationLink>
         </PaginationItem>
-        <PaginationItem>
+        {
+          nextPageLink && (
+            <PaginationItem>
+              <PaginationLink href={`${nextPageLink}`}>
+                {nextPageLink}
+              </PaginationLink>
+            </PaginationItem>
+          )
+        }
+        <!-- <PaginationItem>
           <PaginationEllipsis />
-        </PaginationItem>
+        </PaginationItem> -->
         {
           !isLastPage && (
             <PaginationItem>
