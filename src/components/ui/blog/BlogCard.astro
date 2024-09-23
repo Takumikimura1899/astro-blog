@@ -1,14 +1,14 @@
 ---
-import type { Blog } from "@/types/blog.types";
-import { getFormattedYearMonthDay } from "@/utils/helper/getFormattedYearMonthDay";
-import CategoryBadge from "./CategoryBadge.astro";
-type Props = Blog;
-const { id, title, category, category2, publishedAt } = Astro.props;
-const date = getFormattedYearMonthDay(publishedAt);
+import type { Blog } from '@/types/blog.types'
+import { getFormattedYearMonthDay } from '@/utils/helper/getFormattedYearMonthDay'
+import CategoryBadge from './CategoryBadge.astro'
+type Props = Blog
+const { id, title, category, category2, publishedAt } = Astro.props
+const date = getFormattedYearMonthDay(publishedAt)
 ---
 
 <div class="card">
-  <a href=`/blog/${id}`>
+  <a href=`/blogs/${id}`>
     <h2>{title}</h2>
   </a>
   <div class="flex">
