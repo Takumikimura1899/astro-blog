@@ -6,9 +6,13 @@ import hljs, { type HighlightResult } from 'highlight.js'
 import { load } from 'cheerio'
 import 'highlight.js/styles/a11y-dark.css'
 import CategoryBadge from '@/components/ui/blog/CategoryBadge.astro'
+import { BLOG_INITIALIZE } from '@/constants/BlogInitialize'
 
 export async function getStaticPaths() {
-  const response = await getBlogs({ limit: 500, fields: ['id'] })
+  const response = await getBlogs({
+    limit: BLOG_INITIALIZE.getAllLimit,
+    fields: ['id'],
+  })
   return response.contents.map((content) => ({ params: { id: content.id } }))
 }
 
