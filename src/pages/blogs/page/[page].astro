@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/pagination'
 import { BLOG_INITIALIZE } from '@/constants/BlogInitialize'
 
+const PAGINATION_OFFSET = 2
+
 export async function getStaticPaths() {
   const totalCount = await getBlogCount()
   const pages = Math.ceil(totalCount / BLOG_INITIALIZE.perPage)
@@ -33,8 +35,29 @@ const response = await getBlogs({
 const isFirstPage = page === '1'
 const isLastPage =
   page === Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage).toString()
-const previousPageLink = isFirstPage ? null : `${Number.parseInt(page) - 1}`
-const nextPageLink = isLastPage ? null : `${Number.parseInt(page) + 1}`
+
+const makePaginationLinks = (currentPage: string) => {
+  const min = 1
+  const max = Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage)
+  const currentPageNum = Number.parseInt(currentPage)
+
+  let startPage = Math.max(min, currentPageNum - PAGINATION_OFFSET)
+  let endPage = Math.min(max, currentPageNum + PAGINATION_OFFSET)
+
+  if (startPage === min) {
+    endPage = Math.min(max, min + 2 * PAGINATION_OFFSET)
+  } else if (endPage === max) {
+    startPage = Math.max(min, max - 2 * PAGINATION_OFFSET)
+  }
+
+  return Array.from({ length: endPage - startPage + 1 }, (_, i) => ({
+    page: startPage + i,
+    href: `/blogs/page/${startPage + i}`,
+    isCurrent: startPage + i === currentPageNum,
+  }))
+}
+
+const paginationLinks = makePaginationLinks(page)
 ---
 
 <BaseLayout>
@@ -59,31 +82,48 @@ const nextPageLink = isLastPage ? null : `${Number.parseInt(page) + 1}`
           )
         }
         {
-          previousPageLink && (
-            <PaginationItem>
-              <PaginationLink href={`${previousPageLink}`}>
-                {previousPageLink}
-              </PaginationLink>
-            </PaginationItem>
+          Number.parseInt(page) - PAGINATION_OFFSET > 1 && (
+            <>
+              <PaginationItem>
+                <PaginationLink href="1">1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+            </>
           )
         }
-        <PaginationItem>
-          <PaginationLink isActive aria-disabled>
-            {page}
-          </PaginationLink>
-        </PaginationItem>
         {
-          nextPageLink && (
+          paginationLinks.map((link) => (
             <PaginationItem>
-              <PaginationLink href={`${nextPageLink}`}>
-                {nextPageLink}
+              <PaginationLink
+                href={!link.isCurrent ? link.href : undefined}
+                isActive={link.isCurrent}
+              >
+                {link.page}
               </PaginationLink>
             </PaginationItem>
+          ))
+        }
+        {
+          Number.parseInt(page) + PAGINATION_OFFSET <
+            Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage) && (
+            <>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink
+                  href={Math.ceil(
+                    response.totalCount / BLOG_INITIALIZE.perPage,
+                  ).toString()}
+                >
+                  {Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage)}
+                </PaginationLink>
+              </PaginationItem>
+            </>
           )
         }
-        <!-- <PaginationItem>
-          <PaginationEllipsis />
-        </PaginationItem> -->
         {
           !isLastPage && (
             <PaginationItem>
