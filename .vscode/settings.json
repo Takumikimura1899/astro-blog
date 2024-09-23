@@ -1,13 +1,21 @@
 {
-  "cSpell.words": ["microcms"],
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
-  "editor.codeActionsOnSave": {
-    "source.addMissingImports": "explicit",
-    "source.fixAll.eslint": "explicit"
-  },
-  "prettier.documentSelectors": ["**/*.astro"],
-  "javascript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifier": "non-relative"
+	"[json]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"editor.codeActionsOnSave": {
+		"quickFix.biome": "explicit",
+		"source.fixAll.biome": "explicit"
+	}
 }

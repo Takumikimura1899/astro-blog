@@ -1,8 +1,8 @@
 ---
-import { getLatestBlog } from '@/lib/microcms'
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import BlogCard from '@/components/ui/blog/BlogCard.astro'
-const response = await getLatestBlog()
+import BlogCard from "@/components/ui/blog/BlogCard.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getLatestBlog } from "@/lib/microcms";
+const response = await getLatestBlog();
 ---
 
 <BaseLayout>

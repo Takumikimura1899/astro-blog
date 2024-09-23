@@ -1,35 +1,35 @@
 ---
-import type { Category } from '@/types/blog.types'
+import type { Category } from "@/types/blog.types";
 
-type Props = Category
-const { name } = Astro.props
+type Props = Category;
+const { name } = Astro.props;
 if (!name) {
-  return
+	return;
 }
 
 const FRONT_END = [
-  'JavaScript',
-  'React',
-  'Next.js',
-  'TypeScript',
-  'TailwindCSS',
-  'Astro',
-] as const
-const BACK_END = ['Node.js', 'Nest.js', 'Prisma', 'Go'] as const
-const TOOLS = ['Github', 'Git', 'Docker', 'Vercel', 'Cloudflare'] as const
+	"JavaScript",
+	"React",
+	"Next.js",
+	"TypeScript",
+	"TailwindCSS",
+	"Astro",
+] as const;
+const BACK_END = ["Node.js", "Nest.js", "Prisma", "Go"] as const;
+const TOOLS = ["Github", "Git", "Docker", "Vercel", "Cloudflare"] as const;
 
 const makeClass = (label: typeof name) => {
-  if (FRONT_END.some((item) => item === label)) {
-    return 'bg-yellow-500'
-  }
-  if (BACK_END.some((item) => item === label)) {
-    return 'bg-blue-500'
-  }
-  if (TOOLS.some((item) => item === label)) {
-    return 'bg-green-500'
-  }
-  return 'bg-gray-500'
-}
+	if (FRONT_END.some((item) => item === label)) {
+		return "bg-yellow-500";
+	}
+	if (BACK_END.some((item) => item === label)) {
+		return "bg-blue-500";
+	}
+	if (TOOLS.some((item) => item === label)) {
+		return "bg-green-500";
+	}
+	return "bg-gray-500";
+};
 ---
 
 <div class={`${makeClass(name)}`}>

@@ -1,63 +1,63 @@
 ---
-import { getBlogs, getBlogCount } from '@/lib/microcms'
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import BlogCard from '@/components/ui/blog/BlogCard.astro'
+import BlogCard from "@/components/ui/blog/BlogCard.astro";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationEllipsis,
-  PaginationNext,
-} from '@/components/ui/pagination'
-import { BLOG_INITIALIZE } from '@/constants/BlogInitialize'
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "@/components/ui/pagination";
+import { BLOG_INITIALIZE } from "@/constants/BlogInitialize";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getBlogCount, getBlogs } from "@/lib/microcms";
 
-const PAGINATION_OFFSET = 2
+const PAGINATION_OFFSET = 2;
 
 export async function getStaticPaths() {
-  const totalCount = await getBlogCount()
-  const pages = Math.ceil(totalCount / BLOG_INITIALIZE.perPage)
-  return Array.from({ length: pages }, (_, i) => ({
-    params: { page: (i + 1).toString() },
-  }))
+	const totalCount = await getBlogCount();
+	const pages = Math.ceil(totalCount / BLOG_INITIALIZE.perPage);
+	return Array.from({ length: pages }, (_, i) => ({
+		params: { page: (i + 1).toString() },
+	}));
 }
 
-const { page } = Astro.params
+const { page } = Astro.params;
 
 const response = await getBlogs({
-  limit: BLOG_INITIALIZE.perPage,
-  offset: (Number.parseInt(page) - 1) * BLOG_INITIALIZE.perPage,
-  orders: '-publishedAt',
-  fields: ['id', 'title', 'category', 'category2', 'publishedAt'],
-})
+	limit: BLOG_INITIALIZE.perPage,
+	offset: (Number.parseInt(page) - 1) * BLOG_INITIALIZE.perPage,
+	orders: "-publishedAt",
+	fields: ["id", "title", "category", "category2", "publishedAt"],
+});
 
-const isFirstPage = page === '1'
+const isFirstPage = page === "1";
 const isLastPage =
-  page === Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage).toString()
+	page === Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage).toString();
 
 const makePaginationLinks = (currentPage: string) => {
-  const min = 1
-  const max = Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage)
-  const currentPageNum = Number.parseInt(currentPage)
+	const min = 1;
+	const max = Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage);
+	const currentPageNum = Number.parseInt(currentPage);
 
-  let startPage = Math.max(min, currentPageNum - PAGINATION_OFFSET)
-  let endPage = Math.min(max, currentPageNum + PAGINATION_OFFSET)
+	let startPage = Math.max(min, currentPageNum - PAGINATION_OFFSET);
+	let endPage = Math.min(max, currentPageNum + PAGINATION_OFFSET);
 
-  if (startPage === min) {
-    endPage = Math.min(max, min + 2 * PAGINATION_OFFSET)
-  } else if (endPage === max) {
-    startPage = Math.max(min, max - 2 * PAGINATION_OFFSET)
-  }
+	if (startPage === min) {
+		endPage = Math.min(max, min + 2 * PAGINATION_OFFSET);
+	} else if (endPage === max) {
+		startPage = Math.max(min, max - 2 * PAGINATION_OFFSET);
+	}
 
-  return Array.from({ length: endPage - startPage + 1 }, (_, i) => ({
-    page: startPage + i,
-    href: `/blogs/page/${startPage + i}`,
-    isCurrent: startPage + i === currentPageNum,
-  }))
-}
+	return Array.from({ length: endPage - startPage + 1 }, (_, i) => ({
+		page: startPage + i,
+		href: `/blogs/page/${startPage + i}`,
+		isCurrent: startPage + i === currentPageNum,
+	}));
+};
 
-const paginationLinks = makePaginationLinks(page)
+const paginationLinks = makePaginationLinks(page);
 ---
 
 <BaseLayout>
