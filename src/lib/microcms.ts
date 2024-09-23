@@ -18,6 +18,14 @@ const client = createClient({
   apiKey: import.meta.env.MICROCMS_API_KEY,
 })
 
+export const getBlogCount = async () => {
+  const res = await client.get<BlogResponse>({
+    endpoint: ENDPOINTS.blog,
+    queries: { limit: 0, fields: ['id'] },
+  })
+  return res.totalCount
+}
+
 export const getBlogs = async (queries?: MicroCMSQueries) => {
   return await client.get<BlogResponse>({ endpoint: ENDPOINTS.blog, queries })
 }

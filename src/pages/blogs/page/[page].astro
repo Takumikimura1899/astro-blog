@@ -1,0 +1,79 @@
+---
+import { getBlogs, getBlogCount } from '@/lib/microcms'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import BlogCard from '@/components/ui/blog/BlogCard.astro'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationLink,
+  PaginationEllipsis,
+  PaginationNext,
+} from '@/components/ui/pagination'
+
+export async function getStaticPaths() {
+  const totalCount = await getBlogCount()
+  const pages = Math.ceil(totalCount / 10)
+  return Array.from({ length: pages }, (_, i) => ({
+    params: { page: (i + 1).toString() },
+  }))
+}
+
+const { page } = Astro.params
+const response = await getBlogs({
+  limit: 10,
+  offset: (Number.parseInt(page) - 1) * 10,
+  orders: '-publishedAt',
+  fields: ['id', 'title', 'category', 'category2', 'publishedAt'],
+})
+---
+
+<BaseLayout>
+  <main class="space-y-8">
+    <h1>一覧</h1>
+    <ul class="grid-container">
+      {
+        response.contents.map((blog) => (
+          <li>
+            <BlogCard {...blog} />
+          </li>
+        ))
+      }
+    </ul>
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious href={`${Number.parseInt(page) - 1}`} />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink href="#">1</PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationEllipsis />
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext href={`${Number.parseInt(page) + 1}`} />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  </main>
+</BaseLayout>
+
+<style>
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  @media (width < 768px) {
+    .grid-container {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
