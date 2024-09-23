@@ -21,12 +21,16 @@ export async function getStaticPaths() {
 }
 
 const { page } = Astro.params
+
 const response = await getBlogs({
   limit: 10,
   offset: (Number.parseInt(page) - 1) * 10,
   orders: '-publishedAt',
   fields: ['id', 'title', 'category', 'category2', 'publishedAt'],
 })
+
+const isFirstPage = page === '1'
+const isLastPage = page === Math.ceil(response.totalCount / 10).toString()
 ---
 
 <BaseLayout>
@@ -43,18 +47,26 @@ const response = await getBlogs({
     </ul>
     <Pagination>
       <PaginationContent>
+        {
+          !isFirstPage && (
+            <PaginationItem>
+              <PaginationPrevious href={`${Number.parseInt(page) - 1}`} />
+            </PaginationItem>
+          )
+        }
         <PaginationItem>
-          <PaginationPrevious href={`${Number.parseInt(page) - 1}`} />
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink href="#">1</PaginationLink>
+          {page}
         </PaginationItem>
         <PaginationItem>
           <PaginationEllipsis />
         </PaginationItem>
-        <PaginationItem>
-          <PaginationNext href={`${Number.parseInt(page) + 1}`} />
-        </PaginationItem>
+        {
+          !isLastPage && (
+            <PaginationItem>
+              <PaginationNext href={`${Number.parseInt(page) + 1}`} />
+            </PaginationItem>
+          )
+        }
       </PaginationContent>
     </Pagination>
   </main>
