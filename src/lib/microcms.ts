@@ -35,6 +35,11 @@ export const getLatestBlog = async () => {
 	return response.contents[0];
 };
 
+export const getLatestBlogs = async (limit: number) => {
+	const response = await getBlogs({ limit, orders: "-publishedAt" });
+	return response.contents;
+};
+
 export const getBlogDetail = async (
 	contentId: string,
 	queries?: MicroCMSQueries,

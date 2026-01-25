@@ -1,0 +1,27 @@
+---
+import BlogCard from "@/features/blog/components/BlogCard.astro";
+import type { Blog } from "@/features/blog/types";
+
+interface Props {
+	blogs: Blog[];
+}
+
+const { blogs } = Astro.props;
+---
+
+<section class="py-12">
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold">最新の記事</h2>
+    <a
+      href="/blogs/page/1"
+      class="text-primary hover:underline font-medium no-underline"
+    >
+      もっと見る &rarr;
+    </a>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {blogs.map((blog) => (
+      <BlogCard {...blog} />
+    ))}
+  </div>
+</section>

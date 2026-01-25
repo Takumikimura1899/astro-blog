@@ -3,12 +3,24 @@ import BaseHead from "@/shared/components/layout/BaseHead.astro";
 import Footer from "@/shared/components/layout/Footer.astro";
 import Header from "@/shared/components/layout/Header.astro";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/config/site";
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+}
+
+const {
+	title = SITE_TITLE,
+	description = SITE_DESCRIPTION,
+	image,
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="ja">
   <head>
-    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <BaseHead title={title} description={description} image={image} />
   </head>
   <body>
     <Header />

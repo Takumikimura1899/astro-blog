@@ -1,11 +1,12 @@
 ---
 import { SNS_LINKS } from "@/config/social";
+import { SITE_CONFIG } from "@/config/site";
 import { Icon } from "astro-icon/components";
 const today = new Date();
 ---
 
 <footer>
-  &copy; {today.getFullYear()} Your name here. All rights reserved.
+  &copy; {today.getFullYear()} {SITE_CONFIG.author.name}. All rights reserved.
   <div class="social-links">
     <a href={SNS_LINKS.twitter} target="_blank">
       <span class="sr-only">x</span>

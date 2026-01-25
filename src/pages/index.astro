@@ -1,13 +1,19 @@
 ---
-import BlogCard from "@/features/blog/components/BlogCard.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getLatestBlog } from "@/lib/microcms";
-const response = await getLatestBlog();
+import HeroSection from "@/shared/components/home/HeroSection.astro";
+import LatestBlogsSection from "@/shared/components/home/LatestBlogsSection.astro";
+import FlashcardIntroSection from "@/shared/components/home/FlashcardIntroSection.astro";
+import { getLatestBlogs } from "@/lib/microcms";
+import { getAllDecks } from "@/data/flashcards";
+
+const blogs = await getLatestBlogs(3);
+const decks = getAllDecks();
 ---
 
 <BaseLayout>
   <main>
-    <h1>Blog<span class="small">(最新の投稿)</span></h1>
-    <BlogCard {...response} />
+    <HeroSection />
+    <LatestBlogsSection blogs={blogs} />
+    <FlashcardIntroSection decks={decks} />
   </main>
 </BaseLayout>

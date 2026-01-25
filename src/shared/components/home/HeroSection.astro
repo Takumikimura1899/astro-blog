@@ -1,0 +1,26 @@
+---
+import { SITE_CONFIG } from "@/config/site";
+---
+
+<section class="py-16 md:py-24 text-center">
+  <h1 class="text-4xl md:text-5xl font-bold mb-6">
+    {SITE_CONFIG.title}
+  </h1>
+  <p class="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+    {SITE_CONFIG.description}
+  </p>
+  <div class="flex flex-wrap gap-4 justify-center">
+    <a
+      href="/blogs/page/1"
+      class="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity no-underline"
+    >
+      ブログを見る
+    </a>
+    <a
+      href="/about"
+      class="inline-flex items-center px-6 py-3 border border-border rounded-lg font-semibold hover:bg-accent transition-colors no-underline"
+    >
+      About
+    </a>
+  </div>
+</section>

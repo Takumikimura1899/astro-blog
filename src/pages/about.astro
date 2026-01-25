@@ -1,0 +1,94 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SITE_CONFIG } from "@/config/site";
+import { SKILLS, ABOUT_CONTENT } from "@/config/about";
+import { SNS_LINKS } from "@/config/social";
+import { Icon } from "astro-icon/components";
+---
+
+<BaseLayout
+  title={`About | ${SITE_CONFIG.title}`}
+  description={`${SITE_CONFIG.author.name}について`}
+>
+  <main class="max-w-3xl mx-auto py-12">
+    <!-- About Me Section -->
+    <section class="mb-12">
+      <h1 class="text-3xl font-bold mb-6">About Me</h1>
+      <div class="bg-card border rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-2">{SITE_CONFIG.author.name}</h2>
+        <p class="text-muted-foreground mb-4">{SITE_CONFIG.author.bio}</p>
+        <p class="text-foreground/90 leading-relaxed">
+          {ABOUT_CONTENT.introduction}
+        </p>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold mb-6">Skills</h2>
+      <div class="space-y-6">
+        <div class="bg-card border rounded-xl p-6">
+          <h3 class="text-lg font-semibold mb-3 text-primary">Frontend</h3>
+          <div class="flex flex-wrap gap-2">
+            {SKILLS.frontend.map((skill) => (
+              <span class="px-3 py-1 bg-accent rounded-full text-sm font-medium">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div class="bg-card border rounded-xl p-6">
+          <h3 class="text-lg font-semibold mb-3 text-primary">Backend</h3>
+          <div class="flex flex-wrap gap-2">
+            {SKILLS.backend.map((skill) => (
+              <span class="px-3 py-1 bg-accent rounded-full text-sm font-medium">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div class="bg-card border rounded-xl p-6">
+          <h3 class="text-lg font-semibold mb-3 text-primary">Infra / Tools</h3>
+          <div class="flex flex-wrap gap-2">
+            {SKILLS.infra.map((skill) => (
+              <span class="px-3 py-1 bg-accent rounded-full text-sm font-medium">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Links Section -->
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Links</h2>
+      <div class="flex flex-wrap gap-4">
+        <a
+          href={SNS_LINKS.github}
+          target="_blank"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-card border rounded-lg hover:border-primary transition-colors no-underline"
+        >
+          <Icon size={24} name="ri:github-fill" />
+          <span class="font-medium">GitHub</span>
+        </a>
+        <a
+          href={SNS_LINKS.twitter}
+          target="_blank"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-card border rounded-lg hover:border-primary transition-colors no-underline"
+        >
+          <Icon size={24} name="ri:twitter-x-fill" />
+          <span class="font-medium">X (Twitter)</span>
+        </a>
+        <a
+          href={SNS_LINKS.zenn}
+          target="_blank"
+          class="inline-flex items-center gap-2 px-4 py-2 bg-card border rounded-lg hover:border-primary transition-colors no-underline"
+        >
+          <Icon size={24} name="simple-icons:zenn" />
+          <span class="font-medium">Zenn</span>
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
