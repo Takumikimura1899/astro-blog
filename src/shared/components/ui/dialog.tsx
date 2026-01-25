@@ -8,6 +8,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
@@ -137,11 +138,11 @@ const DialogPortal: React.FC<DialogPortalProps> = ({ children }) => {
 		setMounted(true);
 	}, []);
 
-	if (!mounted || !open) {
+	if (!open) {
 		return null;
 	}
 
-	return <>{children}</>;
+	return mounted ? createPortal(children, document.body) : null;
 };
 DialogPortal.displayName = "DialogPortal";
 
