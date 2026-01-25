@@ -1,0 +1,11 @@
+{
+	"$schema": "https://unpkg.com/knip@latest/schema.json",
+	"entry": ["src/pages/**/*.astro"],
+	"project": ["src/**/*.{ts,tsx,astro}"],
+	"ignore": ["src/env.d.ts", "src/shared/components/ui/**/*.tsx"],
+	"ignoreDependencies": [
+		"tailwindcss",
+		"tailwindcss-animate",
+		"@iconify-json/*"
+	]
+}

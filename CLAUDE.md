@@ -19,7 +19,18 @@ bun run check
 
 # フォーマット
 bun run format
+
+# 未使用コード検出
+bun run knip
+
+# Git hooks セットアップ（初回のみ）
+bunx lefthook install
 ```
+
+## 開発環境
+
+- **Git hooks**: lefthookによりpre-commitでBiomeチェックが自動実行される
+- **未使用コード検出**: knipで未使用のエクスポート、依存関係、ファイルを検出できる
 
 ## 技術スタック
 

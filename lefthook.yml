@@ -1,0 +1,7 @@
+# Git commit前に自動でLint/Formatチェックを実行
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{ts,tsx,js,jsx,astro}"
+      run: bunx biome check --staged --no-errors-on-unmatched
