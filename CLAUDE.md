@@ -23,10 +23,10 @@ bun run format
 
 ## 技術スタック
 
-- **フレームワーク**: Astro 4.x（静的サイトジェネレーター）
-- **UI**: React 18 + Tailwind CSS
+- **フレームワーク**: Astro 5.x（静的サイトジェネレーター）
+- **UI**: React 19 + Tailwind CSS 4
 - **CMS**: microCMS（ヘッドレス CMS）
-- **Linter/Formatter**: Biome（タブインデント、ダブルクォート）
+- **Linter/Formatter**: Biome 2.x（タブインデント、ダブルクォート）
 
 ## アーキテクチャ
 

@@ -4,11 +4,11 @@ Astro + React + Tailwind CSS で構築した技術ブログサイト。microCMS 
 
 ## 技術スタック
 
-- **Astro 4.x** - 静的サイトジェネレーター
-- **React 18** - UI コンポーネント
-- **Tailwind CSS** - スタイリング
+- **Astro 5.x** - 静的サイトジェネレーター
+- **React 19** - UI コンポーネント
+- **Tailwind CSS 4** - スタイリング
 - **microCMS** - ヘッドレス CMS（ブログ記事管理）
-- **Biome** - Linter / Formatter
+- **Biome 2.x** - Linter / Formatter
 
 ## セットアップ
 
