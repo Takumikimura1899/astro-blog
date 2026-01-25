@@ -19,13 +19,13 @@ const BACK_END = ["Node.js", "Nest.js", "Prisma", "Go"] as const;
 const TOOLS = ["Github", "Git", "Docker", "Vercel", "Cloudflare"] as const;
 
 const getCategoryColorClass = (label: typeof name): string => {
-	if (FRONT_END.some((item) => item === label)) {
+	if (FRONT_END.includes(label)) {
 		return "bg-amber-500 dark:bg-amber-600";
 	}
-	if (BACK_END.some((item) => item === label)) {
+	if (BACK_END.includes(label)) {
 		return "bg-blue-600 dark:bg-blue-500";
 	}
-	if (TOOLS.some((item) => item === label)) {
+	if (TOOLS.includes(label)) {
 		return "bg-emerald-500 dark:bg-emerald-600";
 	}
 	return "bg-gray-500 dark:bg-gray-600";
