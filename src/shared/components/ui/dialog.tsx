@@ -223,49 +223,43 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
 			};
 		}, [open]);
 
-		// ESCキーで閉じる
+		// ESCキーで閉じる & フォーカストラップ
 		useEffect(() => {
 			const handleKeyDown = (e: KeyboardEvent) => {
-				if (e.key === "Escape" && open) {
+				if (!open) return;
+
+				if (e.key === "Escape") {
 					setOpen(false);
+				}
+
+				if (e.key === "Tab") {
+					const focusableElements =
+						contentRef.current?.querySelectorAll<HTMLElement>(
+							'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+						);
+
+					if (!focusableElements || focusableElements.length === 0) return;
+
+					const firstElement = focusableElements[0];
+					const lastElement = focusableElements[focusableElements.length - 1];
+
+					if (e.shiftKey) {
+						if (document.activeElement === firstElement) {
+							e.preventDefault();
+							lastElement.focus();
+						}
+					} else {
+						if (document.activeElement === lastElement) {
+							e.preventDefault();
+							firstElement.focus();
+						}
+					}
 				}
 			};
 
 			document.addEventListener("keydown", handleKeyDown);
 			return () => document.removeEventListener("keydown", handleKeyDown);
 		}, [open, setOpen]);
-
-		// フォーカストラップ
-		useEffect(() => {
-			const handleKeyDown = (e: KeyboardEvent) => {
-				if (e.key !== "Tab" || !open) return;
-
-				const focusableElements =
-					contentRef.current?.querySelectorAll<HTMLElement>(
-						'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-					);
-
-				if (!focusableElements || focusableElements.length === 0) return;
-
-				const firstElement = focusableElements[0];
-				const lastElement = focusableElements[focusableElements.length - 1];
-
-				if (e.shiftKey) {
-					if (document.activeElement === firstElement) {
-						e.preventDefault();
-						lastElement.focus();
-					}
-				} else {
-					if (document.activeElement === lastElement) {
-						e.preventDefault();
-						firstElement.focus();
-					}
-				}
-			};
-
-			document.addEventListener("keydown", handleKeyDown);
-			return () => document.removeEventListener("keydown", handleKeyDown);
-		}, [open]);
 
 		return (
 			<DialogPortal>
