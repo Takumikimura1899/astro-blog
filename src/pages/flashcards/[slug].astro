@@ -4,11 +4,11 @@ import { FlashcardPlayer } from "@/components/flashcard/FlashcardPlayer";
 import { getAllDecks } from "@/data/flashcards";
 
 export async function getStaticPaths() {
-  const decks = getAllDecks();
-  return decks.map((deck) => ({
-    params: { slug: deck.id },
-    props: { deck },
-  }));
+	const decks = getAllDecks();
+	return decks.map((deck) => ({
+		params: { slug: deck.id },
+		props: { deck },
+	}));
 }
 
 const { deck } = Astro.props;

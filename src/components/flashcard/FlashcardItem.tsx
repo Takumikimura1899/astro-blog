@@ -14,7 +14,7 @@ export const FlashcardItem = ({ question, answer, className }: Props) => {
 		<button
 			type="button"
 			className={cn(
-				"group h-64 w-full cursor-pointer perspective-1000 bg-transparent border-none p-0 outline-none focus:ring-2 focus:ring-primary rounded-xl text-left",
+				"group h-64 w-full cursor-pointer perspective-1000 bg-transparent border-none p-0 outline-hidden focus:ring-2 focus:ring-primary rounded-xl text-left",
 				className,
 			)}
 			onClick={() => setIsFlipped(!isFlipped)}

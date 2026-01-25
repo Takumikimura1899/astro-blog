@@ -1,5 +1,5 @@
-import { vpcDeck } from "./vpc";
 import type { Deck } from "./types";
+import { vpcDeck } from "./vpc";
 
 export const decks: Deck[] = [
 	vpcDeck,

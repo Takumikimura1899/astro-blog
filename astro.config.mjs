@@ -2,10 +2,9 @@ import mdx from "@astrojs/mdx";
 import partytown from "@astrojs/partytown";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
 import { defineConfig } from "astro/config";
-
-import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,8 +19,8 @@ export default defineConfig({
 			},
 		}),
 		react(),
-		tailwind({
-			applyBaseStyles: false,
-		}),
 	],
+	vite: {
+		plugins: [tailwindcss()],
+	},
 });

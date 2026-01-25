@@ -27,7 +27,7 @@ const { page } = Astro.params;
 
 const response = await getBlogs({
 	limit: BLOG_INITIALIZE.perPage,
-	offset: (Number.parseInt(page) - 1) * BLOG_INITIALIZE.perPage,
+	offset: (Number.parseInt(page, 10) - 1) * BLOG_INITIALIZE.perPage,
 	orders: "-publishedAt",
 	fields: ["id", "title", "category", "category2", "publishedAt"],
 });
@@ -39,7 +39,7 @@ const isLastPage =
 const makePaginationLinks = (currentPage: string) => {
 	const min = 1;
 	const max = Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage);
-	const currentPageNum = Number.parseInt(currentPage);
+	const currentPageNum = Number.parseInt(currentPage, 10);
 
 	let startPage = Math.max(min, currentPageNum - PAGINATION_OFFSET);
 	let endPage = Math.min(max, currentPageNum + PAGINATION_OFFSET);

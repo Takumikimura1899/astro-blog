@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FlashcardItem } from "./FlashcardItem";
 import type { Deck } from "@/data/flashcards/types";
+import { FlashcardItem } from "./FlashcardItem";
 
 type Props = {
 	deck: Deck;
