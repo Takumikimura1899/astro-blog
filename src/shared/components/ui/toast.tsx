@@ -11,7 +11,7 @@ const toastVariants = cva(
 		variants: {
 			variant: {
 				success:
-					"border-green-200 bg-green-50 text-green-900 dark:border-green-800 dark:bg-green-950 dark:text-green-100",
+					"border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-100",
 				error:
 					"border-destructive/50 bg-destructive/10 text-destructive dark:border-destructive dark:bg-destructive/20 dark:text-red-200",
 				warning:
@@ -35,7 +35,7 @@ const iconMap: Record<ToastVariant, React.ReactNode> = {
 			strokeWidth="2"
 			strokeLinecap="round"
 			strokeLinejoin="round"
-			className="h-5 w-5 text-green-600 dark:text-green-400"
+			className="h-5 w-5 text-emerald-600 dark:text-emerald-400"
 			aria-hidden="true"
 		>
 			<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
