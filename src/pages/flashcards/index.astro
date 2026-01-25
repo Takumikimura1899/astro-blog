@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getAllDecks } from "@/data/flashcards";
+
+const decks = getAllDecks();
+---
+
+<BaseLayout>
+  <main>
+    <div class="mb-12 text-center">
+        <h1 class="text-3xl font-bold mb-4">Flashcards</h1>
+        <p class="text-muted-foreground max-w-2xl mx-auto">
+            学習したいテーマを選択してください。
+        </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {decks.map((deck) => (
+            <a href={`/flashcards/${deck.id}`} class="group block no-underline hover:no-underline">
+                <article class="h-full p-6 bg-card border rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-primary">
+                    <h2 class="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{deck.title}</h2>
+                    <p class="text-muted-foreground mb-4 text-xs h-12 overflow-hidden">{deck.cards.length} cards</p>
+                    <p class="text-sm text-foreground/80 line-clamp-3">
+                        {deck.description || "説明はありません"}
+                    </p>
+                </article>
+            </a>
+        ))}
+    </div>
+  </main>
+</BaseLayout>

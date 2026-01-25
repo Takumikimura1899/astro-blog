@@ -1,0 +1,111 @@
+import type { Deck } from "./types";
+
+export const vpcDeck: Deck = {
+	id: "aws-vpc",
+	title: "AWS VPC",
+	description: "AWS Virtual Private Cloudに関する基礎知識",
+	cards: [
+		{
+			id: "vpc-1",
+			question: "VPCの正式名称は？",
+			answer: "Virtual Private Cloud\n（バーチャル・プライベート・クラウド）",
+		},
+		{
+			id: "vpc-2",
+			question: "VPCとは一言で言うと？",
+			answer: "AWS上に作る自分専用の仮想ネットワーク",
+		},
+		{
+			id: "vpc-3",
+			question: "VPCで使用されるIPアドレスは\nパブリック？プライベート？",
+			answer:
+				"プライベートIPアドレス\n\n他のVPCと重複してもOK\n（完全に分離されているため）",
+		},
+		{
+			id: "vpc-4",
+			question: "プライベートIPアドレスの3つの範囲は？",
+			answer: "10.0.0.0/8\n172.16.0.0/12\n192.168.0.0/16\n\n（RFC 1918で定義）",
+		},
+		{
+			id: "vpc-5",
+			question: "デフォルトVPCのCIDRは？",
+			answer: "172.31.0.0/16",
+		},
+		{
+			id: "vpc-6",
+			question: "デフォルトVPCが最初から持っているものは？\n（4つ）",
+			answer:
+				"・インターネットゲートウェイ\n・ルートテーブル（設定済み）\n・サブネット（各AZに1つ）\n・パブリックIP自動付与の設定",
+		},
+		{
+			id: "vpc-7",
+			question: "CIDRの正式名称は？",
+			answer:
+				"Classless Inter-Domain Routing\n（クラスレス・インタードメイン・ルーティング）",
+		},
+		{
+			id: "vpc-8",
+			question: "CIDR「10.0.0.0/16」の\n/16 は何を意味する？",
+			answer:
+				"ネットワーク部のビット数\n\n32ビット中16ビットが固定\n→ 残り16ビットがホスト部（使えるIP）",
+		},
+		{
+			id: "vpc-9",
+			question: "/24 で使えるIPアドレスは約何個？",
+			answer:
+				"約254個\n\n計算：2^(32-24) - 2 = 254\n（-2はネットワークアドレスとブロードキャスト分）",
+		},
+		{
+			id: "vpc-10",
+			question: "/16 で使えるIPアドレスは約何個？",
+			answer: "約65,534個\n\n計算：2^(32-16) - 2 = 65,534",
+		},
+		{
+			id: "vpc-11",
+			question: "CIDRの数字が大きいほど\nIPアドレスの範囲は？",
+			answer:
+				"狭くなる\n\n/8 → 約1,677万個（広い）\n/24 → 約254個\n/32 → 1個のみ（狭い）",
+		},
+		{
+			id: "vpc-12",
+			question: "インターネットゲートウェイ（IGW）の役割は？",
+			answer:
+				"VPCとインターネットを繋ぐ出入口\n\nパブリックIP ⇔ プライベートIP の変換を行う",
+		},
+		{
+			id: "vpc-13",
+			question: "EC2がインターネットと通信するために\n必要なものは？（4つ）",
+			answer:
+				"1. インターネットゲートウェイ\n2. ルートテーブル（IGWへの経路）\n3. パブリックIP\n4. セキュリティグループ（通信許可）",
+		},
+		{
+			id: "vpc-14",
+			question: "インターネットゲートウェイと\nAPIゲートウェイの違いは？",
+			answer:
+				"IGW：ネットワーク層\n　→ VPCとインターネットを繋ぐ\n\nAPI Gateway：アプリケーション層\n　→ APIのエンドポイントを管理",
+		},
+		{
+			id: "vpc-15",
+			question: "VPCの【中】に作るサービスは？\n（4つ例を挙げよ）",
+			answer:
+				"・EC2\n・RDS\n・ElastiCache\n・ELB（ロードバランサー）\n\n→ サブネット、セキュリティグループを指定",
+		},
+		{
+			id: "vpc-16",
+			question: "VPCの【外】に存在するサービスは？\n（4つ例を挙げよ）",
+			answer:
+				"・Lambda（デフォルト）\n・API Gateway\n・S3\n・DynamoDB\n\n→ AWSが管理、ネットワーク設定不要",
+		},
+		{
+			id: "vpc-17",
+			question: "Lambdaはデフォルトで\nVPCの中？外？",
+			answer:
+				"外\n\nただし設定でVPC内に置くことも可能\n（RDSにアクセスしたい場合など）",
+		},
+		{
+			id: "vpc-18",
+			question: "API Gateway + Lambda構成で\n自分でIGWは必要？",
+			answer: "不要\n\n両方ともVPCの外にあり\nAWSが管理するため",
+		},
+	],
+};
