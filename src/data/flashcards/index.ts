@@ -1,4 +1,4 @@
-import type { Deck } from "./types";
+import type { Deck } from "@/features/flashcard/types";
 import { vpcDeck } from "./vpc";
 
 export const decks: Deck[] = [

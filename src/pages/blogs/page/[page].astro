@@ -1,5 +1,5 @@
 ---
-import BlogCard from "@/components/ui/blog/BlogCard.astro";
+import BlogCard from "@/features/blog/components/BlogCard.astro";
 import {
 	Pagination,
 	PaginationContent,
@@ -8,8 +8,8 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-} from "@/components/ui/pagination";
-import { BLOG_INITIALIZE } from "@/constants/BlogInitialize";
+} from "@/shared/components/ui/pagination";
+import { BLOG_CONFIG } from "@/config/blog";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getBlogCount, getBlogs } from "@/lib/microcms";
 
@@ -17,7 +17,7 @@ const PAGINATION_OFFSET = 2;
 
 export async function getStaticPaths() {
 	const totalCount = await getBlogCount();
-	const pages = Math.ceil(totalCount / BLOG_INITIALIZE.perPage);
+	const pages = Math.ceil(totalCount / BLOG_CONFIG.perPage);
 	return Array.from({ length: pages }, (_, i) => ({
 		params: { page: (i + 1).toString() },
 	}));
@@ -26,19 +26,19 @@ export async function getStaticPaths() {
 const { page } = Astro.params;
 
 const response = await getBlogs({
-	limit: BLOG_INITIALIZE.perPage,
-	offset: (Number.parseInt(page, 10) - 1) * BLOG_INITIALIZE.perPage,
+	limit: BLOG_CONFIG.perPage,
+	offset: (Number.parseInt(page, 10) - 1) * BLOG_CONFIG.perPage,
 	orders: "-publishedAt",
 	fields: ["id", "title", "category", "category2", "publishedAt"],
 });
 
 const isFirstPage = page === "1";
 const isLastPage =
-	page === Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage).toString();
+	page === Math.ceil(response.totalCount / BLOG_CONFIG.perPage).toString();
 
 const makePaginationLinks = (currentPage: string) => {
 	const min = 1;
-	const max = Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage);
+	const max = Math.ceil(response.totalCount / BLOG_CONFIG.perPage);
 	const currentPageNum = Number.parseInt(currentPage, 10);
 
 	let startPage = Math.max(min, currentPageNum - PAGINATION_OFFSET);
@@ -109,7 +109,7 @@ const paginationLinks = makePaginationLinks(page);
         }
         {
           Number.parseInt(page) + PAGINATION_OFFSET <
-            Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage) && (
+            Math.ceil(response.totalCount / BLOG_CONFIG.perPage) && (
             <>
               <PaginationItem>
                 <PaginationEllipsis />
@@ -117,10 +117,10 @@ const paginationLinks = makePaginationLinks(page);
               <PaginationItem>
                 <PaginationLink
                   href={`/blogs/page/${Math.ceil(
-                    response.totalCount / BLOG_INITIALIZE.perPage,
+                    response.totalCount / BLOG_CONFIG.perPage,
                   ).toString()}`}
                 >
-                  {Math.ceil(response.totalCount / BLOG_INITIALIZE.perPage)}
+                  {Math.ceil(response.totalCount / BLOG_CONFIG.perPage)}
                 </PaginationLink>
               </PaginationItem>
             </>

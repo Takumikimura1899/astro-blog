@@ -14,3 +14,8 @@ export const BLOG_CATEGORIES = [
 	"Cloudflare",
 	"Go",
 ] as const;
+
+export const BLOG_CONFIG = {
+	perPage: 10,
+	getAllLimit: 500,
+} as const;

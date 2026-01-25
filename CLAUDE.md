@@ -40,15 +40,22 @@ bun run format
 
 ```
 src/
-├── components/      # Astro/Reactコンポーネント
-│   ├── ui/          # 再利用可能なUIコンポーネント（shadcn/ui系）
-│   └── flashcard/   # フラッシュカード用Reactコンポーネント
-├── pages/           # ルーティング（Astroファイルベースルーティング）
-├── layouts/         # ページレイアウト
-├── lib/             # ユーティリティ・API クライアント
-├── types/           # TypeScript型定義
-├── constants/       # 定数
-└── data/            # ローカルデータ（フラッシュカード等）
+├── features/            # 機能（ドメイン）別モジュール
+│   ├── blog/
+│   │   ├── components/  # BlogCard, CategoryBadge
+│   │   └── types.ts     # Blog, Category型
+│   └── flashcard/
+│       └── components/  # FlashcardItem, FlashcardPlayer
+├── shared/              # 共有リソース
+│   └── components/
+│       ├── layout/      # Header, Footer, BaseHead
+│       └── ui/          # 汎用UI（shadcn/ui系）
+├── config/              # 設定・定数（site, blog, social）
+├── data/                # ローカルデータ（フラッシュカード等）
+├── layouts/             # ページレイアウト
+├── lib/                 # 外部サービス連携（microCMS等）
+├── pages/               # ルーティング
+└── utils/               # ユーティリティ関数
 ```
 
 ### パスエイリアス

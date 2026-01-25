@@ -1,4 +1,4 @@
-import type { Deck } from "./types";
+import type { Deck } from "@/features/flashcard/types";
 
 export const vpcDeck: Deck = {
 	id: "aws-vpc",

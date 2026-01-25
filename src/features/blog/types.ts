@@ -1,4 +1,4 @@
-import type { BLOG_CATEGORIES } from "@/constants/BlogCategories";
+import type { BLOG_CATEGORIES } from "@/config/blog";
 
 export type Blog = {
 	id: string;

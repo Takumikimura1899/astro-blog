@@ -1,16 +1,16 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getBlogDetail, getBlogs } from "@/lib/microcms";
-import { getFormattedYearMonthDay } from "@/utils/helper/getFormattedYearMonthDay";
+import { formatDate } from "@/utils/date";
 import { load } from "cheerio";
 import hljs, { type HighlightResult } from "highlight.js";
 import "highlight.js/styles/a11y-dark.css";
-import CategoryBadge from "@/components/ui/blog/CategoryBadge.astro";
-import { BLOG_INITIALIZE } from "@/constants/BlogInitialize";
+import CategoryBadge from "@/features/blog/components/CategoryBadge.astro";
+import { BLOG_CONFIG } from "@/config/blog";
 
 export async function getStaticPaths() {
 	const response = await getBlogs({
-		limit: BLOG_INITIALIZE.getAllLimit,
+		limit: BLOG_CONFIG.getAllLimit,
 		fields: ["id"],
 	});
 	return response.contents.map((content) => ({ params: { id: content.id } }));
@@ -55,7 +55,7 @@ blog.body = $.html();
           {blog.category2 && <CategoryBadge {...blog.category2} />}
         </div>
       </div>
-      <p>公開日時:{getFormattedYearMonthDay(blog.publishedAt)}</p>
+      <p>公開日時:{formatDate(blog.publishedAt)}</p>
     </div>
     <div class="space-y-4 py-12" set:html={blog.body} />
   </main>

@@ -1,6 +1,6 @@
 import type { MicroCMSQueries } from "microcms-js-sdk";
 import { createClient } from "microcms-js-sdk";
-import type { Blog } from "@/types/blog.types";
+import type { Blog } from "@/features/blog/types";
 
 const ENDPOINTS = {
 	blog: "blog",

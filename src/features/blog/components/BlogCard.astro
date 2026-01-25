@@ -1,10 +1,10 @@
 ---
-import type { Blog } from "@/types/blog.types";
-import { getFormattedYearMonthDay } from "@/utils/helper/getFormattedYearMonthDay";
+import type { Blog } from "../types";
+import { formatDate } from "@/utils/date";
 import CategoryBadge from "./CategoryBadge.astro";
 type Props = Blog;
 const { id, title, category, category2, publishedAt } = Astro.props;
-const date = getFormattedYearMonthDay(publishedAt);
+const date = formatDate(publishedAt);
 ---
 
 <div class="card">
