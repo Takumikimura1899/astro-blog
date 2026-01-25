@@ -6,7 +6,7 @@ const ENDPOINTS = {
 	blog: "blog",
 } as const;
 
-export type BlogResponse = {
+type BlogResponse = {
 	totalCount: number;
 	offset: number;
 	limit: number;
@@ -28,11 +28,6 @@ export const getBlogCount = async () => {
 
 export const getBlogs = async (queries?: MicroCMSQueries) => {
 	return await client.get<BlogResponse>({ endpoint: ENDPOINTS.blog, queries });
-};
-
-export const getLatestBlog = async () => {
-	const response = await getBlogs({ limit: 1, orders: "-publishedAt" });
-	return response.contents[0];
 };
 
 export const getLatestBlogs = async (limit: number) => {
