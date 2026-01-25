@@ -7,45 +7,15 @@ const { id, title, category, category2, publishedAt } = Astro.props;
 const date = formatDate(publishedAt);
 ---
 
-<div class="card">
-  <a href=`/blogs/${id}`>
-    <h2>{title}</h2>
+<div class="p-4 rounded-lg h-full border border-border">
+  <a href=`/blogs/${id}` class="text-inherit no-underline hover:text-muted-foreground hover:no-underline">
+    <h2 class="text-lg">{title}</h2>
   </a>
-  <div class="flex">
+  <div class="flex justify-between items-center">
     <div>
       {category && <CategoryBadge {...category} />}
       {category2 && <CategoryBadge {...category2} />}
     </div>
-    <p>{date}</p>
+    <p class="m-0">{date}</p>
   </div>
 </div>
-
-<style>
-  h2 {
-    font-size: 1.2rem;
-  }
-  a {
-    color: inherit;
-  }
-  a:hover {
-    color: gray;
-    text-decoration: none;
-  }
-
-  p {
-    margin: 0;
-  }
-
-  .card {
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    height: 100%;
-  }
-
-  .flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-</style>
