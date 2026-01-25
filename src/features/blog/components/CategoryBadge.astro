@@ -18,44 +18,20 @@ const FRONT_END = [
 const BACK_END = ["Node.js", "Nest.js", "Prisma", "Go"] as const;
 const TOOLS = ["Github", "Git", "Docker", "Vercel", "Cloudflare"] as const;
 
-const makeClass = (label: typeof name) => {
-	if (FRONT_END.some((item) => item === label)) {
-		return "bg-yellow-500";
+const getCategoryColorClass = (label: typeof name): string => {
+	if (FRONT_END.includes(label)) {
+		return "bg-amber-500 dark:bg-amber-600";
 	}
-	if (BACK_END.some((item) => item === label)) {
-		return "bg-blue-500";
+	if (BACK_END.includes(label)) {
+		return "bg-blue-600 dark:bg-blue-500";
 	}
-	if (TOOLS.some((item) => item === label)) {
-		return "bg-green-500";
+	if (TOOLS.includes(label)) {
+		return "bg-emerald-500 dark:bg-emerald-600";
 	}
-	return "bg-gray-500";
+	return "bg-gray-500 dark:bg-gray-600";
 };
 ---
 
-<div class={`${makeClass(name)}`}>
+<div class={`inline-block px-2 py-1 rounded text-white text-xs ${getCategoryColorClass(name)}`}>
   {name}
 </div>
-
-<style>
-  .bg-yellow-500 {
-    background-color: #f59e0b;
-  }
-  .bg-blue-500 {
-    background-color: #2563eb;
-  }
-  .bg-green-500 {
-    background-color: #10b981;
-  }
-  .bg-gray-500 {
-    background-color: #6b7280;
-  }
-  div {
-    font-family: Arial, Helvetica, sans-serif;
-    display: inline-block;
-    padding: 0.2rem 0.3rem;
-    line-height: 1.2;
-    border-radius: 0.25rem;
-    color: white;
-    font-size: 0.75rem;
-  }
-</style>
