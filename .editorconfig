@@ -1,0 +1,42 @@
+# EditorConfig - https://editorconfig.org
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+indent_size = 2
+
+# TypeScript/JavaScript
+[*.{ts,tsx,js,jsx}]
+indent_style = tab
+indent_size = 2
+
+# Astro
+[*.astro]
+indent_style = tab
+indent_size = 2
+
+# JSON/YAML
+[*.{json,jsonc,yml,yaml}]
+indent_style = tab
+indent_size = 2
+
+# Markdown
+[*.md]
+trim_trailing_whitespace = false
+
+# Makefile (must use tabs)
+[Makefile]
+indent_style = tab
+
+# Git/Shell
+[{.gitignore,.gitattributes}]
+indent_style = tab
+
+[*.sh]
+indent_style = tab
+indent_size = 2
