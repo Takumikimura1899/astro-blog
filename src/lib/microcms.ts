@@ -52,13 +52,10 @@ export const getBlogsByCategory = async (
 	const offset = queries?.offset ?? 0;
 
 	// 全記事を取得（フィルタはJS側で行う）
-	const res = await client.get<BlogResponse>({
-		endpoint: ENDPOINTS.blog,
-		queries: {
-			limit: BLOG_CONFIG.getAllLimit,
-			orders: queries?.orders ?? "-publishedAt",
-			fields: queries?.fields,
-		},
+	const res = await getBlogs({
+		limit: BLOG_CONFIG.getAllLimit,
+		orders: queries?.orders ?? "-publishedAt",
+		fields: queries?.fields,
 	});
 
 	// カテゴリでフィルタ
@@ -87,13 +84,10 @@ export const getRelatedBlogs = async (
 	categoryName: string,
 	limit = 3,
 ) => {
-	const res = await client.get<BlogResponse>({
-		endpoint: ENDPOINTS.blog,
-		queries: {
-			limit: BLOG_CONFIG.getAllLimit,
-			orders: "-publishedAt",
-			fields: ["id", "title", "category", "category2", "publishedAt"],
-		},
+	const res = await getBlogs({
+		limit: BLOG_CONFIG.getAllLimit,
+		orders: "-publishedAt",
+		fields: ["id", "title", "category", "category2", "publishedAt"],
 	});
 
 	// カテゴリでフィルタし、現在の記事を除外
