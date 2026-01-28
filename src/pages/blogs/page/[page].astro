@@ -12,22 +12,38 @@ import {
 } from "@/shared/components/ui/pagination";
 import { BLOG_CONFIG, BLOG_CATEGORIES, CATEGORY_SLUG_MAP } from "@/config/blog";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getBlogCount, getBlogs, getBlogCountByCategory } from "@/lib/microcms";
+import { getBlogs } from "@/lib/microcms";
 
 const PAGINATION_OFFSET = 2;
 
 export async function getStaticPaths() {
-	const totalCount = await getBlogCount();
-	const pages = Math.ceil(totalCount / BLOG_CONFIG.perPage);
+	// 全記事を1回だけ取得
+	const allBlogs = await getBlogs({
+		limit: BLOG_CONFIG.getAllLimit,
+		fields: ["id", "category", "category2"],
+	});
 
-	// カテゴリカウントを1回だけ取得
-	const categories = await Promise.all(
-		BLOG_CATEGORIES.map(async (category) => ({
-			name: category,
-			slug: CATEGORY_SLUG_MAP[category],
-			count: await getBlogCountByCategory(category),
-		})),
-	);
+	// カテゴリごとの記事数を集計
+	const categoryCounts = new Map<string, number>();
+	for (const blog of allBlogs.contents) {
+		if (blog.category) {
+			const name = blog.category.name;
+			categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
+		}
+		if (blog.category2) {
+			const name = blog.category2.name;
+			categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
+		}
+	}
+
+	const categories = BLOG_CATEGORIES.map((category) => ({
+		name: category,
+		slug: CATEGORY_SLUG_MAP[category],
+		count: categoryCounts.get(category) || 0,
+	}));
+
+	const totalCount = allBlogs.totalCount;
+	const pages = Math.ceil(totalCount / BLOG_CONFIG.perPage);
 
 	return Array.from({ length: pages }, (_, i) => ({
 		params: { page: (i + 1).toString() },
