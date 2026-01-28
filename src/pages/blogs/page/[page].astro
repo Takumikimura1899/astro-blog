@@ -10,21 +10,33 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/shared/components/ui/pagination";
-import { BLOG_CONFIG } from "@/config/blog";
+import { BLOG_CONFIG, BLOG_CATEGORIES, CATEGORY_SLUG_MAP } from "@/config/blog";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getBlogCount, getBlogs } from "@/lib/microcms";
+import { getBlogCount, getBlogs, getBlogCountByCategory } from "@/lib/microcms";
 
 const PAGINATION_OFFSET = 2;
 
 export async function getStaticPaths() {
 	const totalCount = await getBlogCount();
 	const pages = Math.ceil(totalCount / BLOG_CONFIG.perPage);
+
+	// カテゴリカウントを1回だけ取得
+	const categories = await Promise.all(
+		BLOG_CATEGORIES.map(async (category) => ({
+			name: category,
+			slug: CATEGORY_SLUG_MAP[category],
+			count: await getBlogCountByCategory(category),
+		})),
+	);
+
 	return Array.from({ length: pages }, (_, i) => ({
 		params: { page: (i + 1).toString() },
+		props: { categories },
 	}));
 }
 
 const { page } = Astro.params;
+const { categories } = Astro.props;
 
 const response = await getBlogs({
 	limit: BLOG_CONFIG.perPage,
@@ -64,7 +76,7 @@ const paginationLinks = makePaginationLinks(page);
 <BaseLayout>
   <main class="space-y-8">
     <h1>一覧</h1>
-    <CategoryFilter />
+    <CategoryFilter categories={categories} />
     <ul class="grid-container">
       {
         response.contents.map((blog) => (

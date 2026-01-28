@@ -1,5 +1,6 @@
 import type { MicroCMSQueries } from "microcms-js-sdk";
 import { createClient } from "microcms-js-sdk";
+import { BLOG_CONFIG } from "@/config/blog";
 import type { Blog } from "@/features/blog/types";
 
 const ENDPOINTS = {
@@ -48,17 +49,25 @@ export const getBlogDetail = async (
 
 /**
  * カテゴリ別の記事数を取得
+ * microCMSはリレーションフィールドのnameでフィルタできないため、
+ * 全記事を取得してJSでフィルタする
  */
 export const getBlogCountByCategory = async (categoryName: string) => {
 	const res = await client.get<BlogResponse>({
 		endpoint: ENDPOINTS.blog,
 		queries: {
-			limit: 0,
-			fields: ["id"],
-			filters: `category.name[equals]${categoryName}[or]category2.name[equals]${categoryName}`,
+			limit: BLOG_CONFIG.getAllLimit,
+			fields: ["id", "category", "category2"],
 		},
 	});
-	return res.totalCount;
+
+	const filtered = res.contents.filter(
+		(blog) =>
+			blog.category?.name === categoryName ||
+			blog.category2?.name === categoryName,
+	);
+
+	return filtered.length;
 };
 
 /**
@@ -68,13 +77,35 @@ export const getBlogsByCategory = async (
 	categoryName: string,
 	queries?: MicroCMSQueries,
 ) => {
-	return await client.get<BlogResponse>({
+	const limit = queries?.limit ?? 10;
+	const offset = queries?.offset ?? 0;
+
+	// 全記事を取得（フィルタはJS側で行う）
+	const res = await client.get<BlogResponse>({
 		endpoint: ENDPOINTS.blog,
 		queries: {
-			...queries,
-			filters: `category.name[equals]${categoryName}[or]category2.name[equals]${categoryName}`,
+			limit: BLOG_CONFIG.getAllLimit,
+			orders: queries?.orders ?? "-publishedAt",
+			fields: queries?.fields,
 		},
 	});
+
+	// カテゴリでフィルタ
+	const filtered = res.contents.filter(
+		(blog) =>
+			blog.category?.name === categoryName ||
+			blog.category2?.name === categoryName,
+	);
+
+	// ページネーション適用
+	const paged = filtered.slice(offset, offset + limit);
+
+	return {
+		contents: paged,
+		totalCount: filtered.length,
+		offset,
+		limit,
+	};
 };
 
 /**
@@ -85,17 +116,22 @@ export const getRelatedBlogs = async (
 	categoryName: string,
 	limit = 3,
 ) => {
-	const response = await client.get<BlogResponse>({
+	const res = await client.get<BlogResponse>({
 		endpoint: ENDPOINTS.blog,
 		queries: {
-			limit: limit + 1,
+			limit: BLOG_CONFIG.getAllLimit,
 			orders: "-publishedAt",
 			fields: ["id", "title", "category", "category2", "publishedAt"],
-			filters: `category.name[equals]${categoryName}[or]category2.name[equals]${categoryName}`,
 		},
 	});
 
-	return response.contents
-		.filter((blog) => blog.id !== currentBlogId)
-		.slice(0, limit);
+	// カテゴリでフィルタし、現在の記事を除外
+	const filtered = res.contents.filter(
+		(blog) =>
+			blog.id !== currentBlogId &&
+			(blog.category?.name === categoryName ||
+				blog.category2?.name === categoryName),
+	);
+
+	return filtered.slice(0, limit);
 };

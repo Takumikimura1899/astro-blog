@@ -1,11 +1,33 @@
 ---
-import { BLOG_CATEGORIES } from "@/config/blog";
+import { BLOG_CATEGORIES, CATEGORY_SLUG_MAP } from "@/config/blog";
+import { getBlogCountByCategory } from "@/lib/microcms";
 
-interface Props {
-	activeCategory?: string;
+interface CategoryCount {
+	name: (typeof BLOG_CATEGORIES)[number];
+	slug: string;
+	count: number;
 }
 
-const { activeCategory } = Astro.props;
+interface Props {
+	activeSlug?: string;
+	categories?: CategoryCount[];
+}
+
+const { activeSlug, categories } = Astro.props;
+
+// categoriesが提供されていない場合のみAPI呼び出し（フォールバック）
+const categoriesWithCount =
+	categories ??
+	(await Promise.all(
+		BLOG_CATEGORIES.map(async (category) => ({
+			name: category,
+			slug: CATEGORY_SLUG_MAP[category],
+			count: await getBlogCountByCategory(category),
+		})),
+	));
+
+// 記事があるカテゴリのみ
+const activeCategories = categoriesWithCount.filter((c) => c.count > 0);
 ---
 
 <nav aria-label="カテゴリフィルタ" class="flex flex-wrap gap-2 mb-8">
@@ -13,24 +35,26 @@ const { activeCategory } = Astro.props;
 		href="/blogs/page/1"
 		class:list={[
 			"py-2 px-4 rounded-full text-sm no-underline transition-all",
-			!activeCategory
+			!activeSlug
 				? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
 				: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700",
 		]}
 	>
 		すべて
 	</a>
-	{BLOG_CATEGORIES.map((category) => (
-		<a
-			href={`/blogs/category/${encodeURIComponent(category)}/page/1`}
-			class:list={[
-				"py-2 px-4 rounded-full text-sm no-underline transition-all",
-				activeCategory === category
-					? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
-					: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700",
-			]}
-		>
-			{category}
-		</a>
-	))}
+	{
+		activeCategories.map((category) => (
+			<a
+				href={`/blogs/category/${category.slug}/page/1`}
+				class:list={[
+					"py-2 px-4 rounded-full text-sm no-underline transition-all",
+					activeSlug === category.slug
+						? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
+						: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700",
+				]}
+			>
+				{category.name}
+			</a>
+		))
+	}
 </nav>

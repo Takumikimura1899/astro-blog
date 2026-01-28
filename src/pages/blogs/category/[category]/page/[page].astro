@@ -10,7 +10,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/shared/components/ui/pagination";
-import { BLOG_CONFIG, BLOG_CATEGORIES } from "@/config/blog";
+import { BLOG_CONFIG, BLOG_CATEGORIES, CATEGORY_SLUG_MAP } from "@/config/blog";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getBlogCountByCategory, getBlogsByCategory } from "@/lib/microcms";
 
@@ -19,14 +19,23 @@ const PAGINATION_OFFSET = 2;
 export async function getStaticPaths() {
 	const paths = [];
 
-	for (const category of BLOG_CATEGORIES) {
-		const totalCount = await getBlogCountByCategory(category);
-		if (totalCount === 0) continue; // 記事がないカテゴリはスキップ
+	// カテゴリカウントを1回だけ取得
+	const allCategories = await Promise.all(
+		BLOG_CATEGORIES.map(async (category) => ({
+			name: category,
+			slug: CATEGORY_SLUG_MAP[category],
+			count: await getBlogCountByCategory(category),
+		})),
+	);
 
-		const pages = Math.ceil(totalCount / BLOG_CONFIG.perPage);
+	for (const cat of allCategories) {
+		if (cat.count === 0) continue;
+
+		const pages = Math.ceil(cat.count / BLOG_CONFIG.perPage);
 		for (let i = 1; i <= pages; i++) {
 			paths.push({
-				params: { category, page: i.toString() },
+				params: { category: cat.slug, page: i.toString() },
+				props: { categoryName: cat.name, categories: allCategories },
 			});
 		}
 	}
@@ -34,9 +43,10 @@ export async function getStaticPaths() {
 	return paths;
 }
 
-const { category, page } = Astro.params;
+const { category: slug, page } = Astro.params;
+const { categoryName, categories } = Astro.props;
 
-const response = await getBlogsByCategory(category, {
+const response = await getBlogsByCategory(categoryName, {
 	limit: BLOG_CONFIG.perPage,
 	offset: (Number.parseInt(page, 10) - 1) * BLOG_CONFIG.perPage,
 	orders: "-publishedAt",
@@ -61,22 +71,20 @@ const makePaginationLinks = (currentPage: string) => {
 		startPage = Math.max(min, max - 2 * PAGINATION_OFFSET);
 	}
 
-	const encodedCategory = encodeURIComponent(category);
 	return Array.from({ length: endPage - startPage + 1 }, (_, i) => ({
 		page: startPage + i,
-		href: `/blogs/category/${encodedCategory}/page/${startPage + i}`,
+		href: `/blogs/category/${slug}/page/${startPage + i}`,
 		isCurrent: startPage + i === currentPageNum,
 	}));
 };
 
 const paginationLinks = makePaginationLinks(page);
-const encodedCategory = encodeURIComponent(category);
 ---
 
 <BaseLayout>
 	<main class="space-y-8">
-		<h1>{category} の記事一覧</h1>
-		<CategoryFilter activeCategory={category} />
+		<h1>{categoryName} の記事一覧</h1>
+		<CategoryFilter activeSlug={slug} categories={categories} />
 		<ul class="grid-container">
 			{
 				response.contents.map((blog) => (
@@ -93,7 +101,7 @@ const encodedCategory = encodeURIComponent(category);
 						!isFirstPage && (
 							<PaginationItem>
 								<PaginationPrevious
-									href={`/blogs/category/${encodedCategory}/page/${Number.parseInt(page) - 1}`}
+									href={`/blogs/category/${slug}/page/${Number.parseInt(page) - 1}`}
 								/>
 							</PaginationItem>
 						)
@@ -102,7 +110,7 @@ const encodedCategory = encodeURIComponent(category);
 						Number.parseInt(page) - PAGINATION_OFFSET > 1 && (
 							<>
 								<PaginationItem>
-									<PaginationLink href={`/blogs/category/${encodedCategory}/page/1`}>1</PaginationLink>
+									<PaginationLink href={`/blogs/category/${slug}/page/1`}>1</PaginationLink>
 								</PaginationItem>
 								<PaginationItem>
 									<PaginationEllipsis />
@@ -130,7 +138,7 @@ const encodedCategory = encodeURIComponent(category);
 								</PaginationItem>
 								<PaginationItem>
 									<PaginationLink
-										href={`/blogs/category/${encodedCategory}/page/${totalPages}`}
+										href={`/blogs/category/${slug}/page/${totalPages}`}
 									>
 										{totalPages}
 									</PaginationLink>
@@ -142,7 +150,7 @@ const encodedCategory = encodeURIComponent(category);
 						!isLastPage && (
 							<PaginationItem>
 								<PaginationNext
-									href={`/blogs/category/${encodedCategory}/page/${Number.parseInt(page) + 1}`}
+									href={`/blogs/category/${slug}/page/${Number.parseInt(page) + 1}`}
 								/>
 							</PaginationItem>
 						)
