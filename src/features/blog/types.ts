@@ -7,8 +7,8 @@ export type Blog = {
 	publishedAt: string;
 	revisedAt: string;
 	title: string;
-	category: Category;
-	category2: Category;
+	category?: Category;
+	category2?: Category;
 	body: string;
 };
 

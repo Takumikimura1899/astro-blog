@@ -1,0 +1,32 @@
+---
+import type { Blog } from "@/features/blog/types";
+import { formatDate } from "@/utils/date";
+
+interface Props {
+	blogs: Pick<
+		Blog,
+		"id" | "title" | "category" | "category2" | "publishedAt"
+	>[];
+}
+
+const { blogs } = Astro.props;
+---
+
+{blogs.length > 0 && (
+	<section aria-labelledby="related-title" class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+		<h2 id="related-title" class="text-xl font-semibold mb-4">関連記事</h2>
+		<ul class="list-none p-0 m-0">
+			{blogs.map((blog) => (
+				<li class="mb-3">
+					<a
+						href={`/blogs/${blog.id}`}
+						class="flex justify-between items-center gap-4 py-3 px-4 bg-gray-50 dark:bg-gray-800 rounded-lg no-underline transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+					>
+						<span class="text-gray-900 dark:text-gray-100 font-medium">{blog.title}</span>
+						<span class="text-gray-500 dark:text-gray-400 text-sm whitespace-nowrap">{formatDate(blog.publishedAt)}</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	</section>
+)}

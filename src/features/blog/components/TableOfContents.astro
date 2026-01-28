@@ -1,0 +1,27 @@
+---
+import type { TocItem } from "@/utils/blog";
+
+interface Props {
+	toc: TocItem[];
+}
+
+const { toc } = Astro.props;
+---
+
+{toc.length > 0 && (
+	<nav aria-label="目次" class="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 mb-8">
+		<h2 class="text-base font-semibold mb-3">目次</h2>
+		<ul class="list-none p-0 m-0">
+			{toc.map((item) => (
+				<li class:list={["mb-2", { "pl-4": item.level === 3 }]}>
+					<a
+						href={`#${item.id}`}
+						class="text-gray-700 dark:text-gray-300 no-underline text-sm hover:text-gray-900 dark:hover:text-gray-100 hover:underline"
+					>
+						{item.text}
+					</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+)}

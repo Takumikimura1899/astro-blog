@@ -1,0 +1,172 @@
+---
+import BlogCard from "@/features/blog/components/BlogCard.astro";
+import CategoryFilter from "@/features/blog/components/CategoryFilter.astro";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
+} from "@/shared/components/ui/pagination";
+import { BLOG_CONFIG, BLOG_CATEGORIES } from "@/config/blog";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getBlogCountByCategory, getBlogsByCategory } from "@/lib/microcms";
+
+const PAGINATION_OFFSET = 2;
+
+export async function getStaticPaths() {
+	const paths = [];
+
+	for (const category of BLOG_CATEGORIES) {
+		const totalCount = await getBlogCountByCategory(category);
+		if (totalCount === 0) continue; // 記事がないカテゴリはスキップ
+
+		const pages = Math.ceil(totalCount / BLOG_CONFIG.perPage);
+		for (let i = 1; i <= pages; i++) {
+			paths.push({
+				params: { category, page: i.toString() },
+			});
+		}
+	}
+
+	return paths;
+}
+
+const { category, page } = Astro.params;
+
+const response = await getBlogsByCategory(category, {
+	limit: BLOG_CONFIG.perPage,
+	offset: (Number.parseInt(page, 10) - 1) * BLOG_CONFIG.perPage,
+	orders: "-publishedAt",
+	fields: ["id", "title", "category", "category2", "publishedAt"],
+});
+
+const totalPages = Math.ceil(response.totalCount / BLOG_CONFIG.perPage);
+const isFirstPage = page === "1";
+const isLastPage = page === totalPages.toString();
+
+const makePaginationLinks = (currentPage: string) => {
+	const min = 1;
+	const max = totalPages;
+	const currentPageNum = Number.parseInt(currentPage, 10);
+
+	let startPage = Math.max(min, currentPageNum - PAGINATION_OFFSET);
+	let endPage = Math.min(max, currentPageNum + PAGINATION_OFFSET);
+
+	if (startPage === min) {
+		endPage = Math.min(max, min + 2 * PAGINATION_OFFSET);
+	} else if (endPage === max) {
+		startPage = Math.max(min, max - 2 * PAGINATION_OFFSET);
+	}
+
+	const encodedCategory = encodeURIComponent(category);
+	return Array.from({ length: endPage - startPage + 1 }, (_, i) => ({
+		page: startPage + i,
+		href: `/blogs/category/${encodedCategory}/page/${startPage + i}`,
+		isCurrent: startPage + i === currentPageNum,
+	}));
+};
+
+const paginationLinks = makePaginationLinks(page);
+const encodedCategory = encodeURIComponent(category);
+---
+
+<BaseLayout>
+	<main class="space-y-8">
+		<h1>{category} の記事一覧</h1>
+		<CategoryFilter activeCategory={category} />
+		<ul class="grid-container">
+			{
+				response.contents.map((blog) => (
+					<li>
+						<BlogCard {...blog} />
+					</li>
+				))
+			}
+		</ul>
+		{totalPages > 1 && (
+			<Pagination>
+				<PaginationContent>
+					{
+						!isFirstPage && (
+							<PaginationItem>
+								<PaginationPrevious
+									href={`/blogs/category/${encodedCategory}/page/${Number.parseInt(page) - 1}`}
+								/>
+							</PaginationItem>
+						)
+					}
+					{
+						Number.parseInt(page) - PAGINATION_OFFSET > 1 && (
+							<>
+								<PaginationItem>
+									<PaginationLink href={`/blogs/category/${encodedCategory}/page/1`}>1</PaginationLink>
+								</PaginationItem>
+								<PaginationItem>
+									<PaginationEllipsis />
+								</PaginationItem>
+							</>
+						)
+					}
+					{
+						paginationLinks.map((link) => (
+							<PaginationItem>
+								<PaginationLink
+									href={!link.isCurrent ? link.href : undefined}
+									isActive={link.isCurrent}
+								>
+									{link.page}
+								</PaginationLink>
+							</PaginationItem>
+						))
+					}
+					{
+						Number.parseInt(page) + PAGINATION_OFFSET < totalPages && (
+							<>
+								<PaginationItem>
+									<PaginationEllipsis />
+								</PaginationItem>
+								<PaginationItem>
+									<PaginationLink
+										href={`/blogs/category/${encodedCategory}/page/${totalPages}`}
+									>
+										{totalPages}
+									</PaginationLink>
+								</PaginationItem>
+							</>
+						)
+					}
+					{
+						!isLastPage && (
+							<PaginationItem>
+								<PaginationNext
+									href={`/blogs/category/${encodedCategory}/page/${Number.parseInt(page) + 1}`}
+								/>
+							</PaginationItem>
+						)
+					}
+				</PaginationContent>
+			</Pagination>
+		)}
+	</main>
+</BaseLayout>
+
+<style>
+	ul {
+		list-style: none;
+		padding-left: 0;
+	}
+	.grid-container {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1rem;
+	}
+
+	@media (width < 768px) {
+		.grid-container {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -1,0 +1,36 @@
+---
+import { BLOG_CATEGORIES } from "@/config/blog";
+
+interface Props {
+	activeCategory?: string;
+}
+
+const { activeCategory } = Astro.props;
+---
+
+<nav aria-label="カテゴリフィルタ" class="flex flex-wrap gap-2 mb-8">
+	<a
+		href="/blogs/page/1"
+		class:list={[
+			"py-2 px-4 rounded-full text-sm no-underline transition-all",
+			!activeCategory
+				? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
+				: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700",
+		]}
+	>
+		すべて
+	</a>
+	{BLOG_CATEGORIES.map((category) => (
+		<a
+			href={`/blogs/category/${encodeURIComponent(category)}/page/1`}
+			class:list={[
+				"py-2 px-4 rounded-full text-sm no-underline transition-all",
+				activeCategory === category
+					? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900"
+					: "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700",
+			]}
+		>
+			{category}
+		</a>
+	))}
+</nav>

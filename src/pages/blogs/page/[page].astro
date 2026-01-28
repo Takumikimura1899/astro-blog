@@ -1,5 +1,6 @@
 ---
 import BlogCard from "@/features/blog/components/BlogCard.astro";
+import CategoryFilter from "@/features/blog/components/CategoryFilter.astro";
 import {
 	Pagination,
 	PaginationContent,
@@ -63,6 +64,7 @@ const paginationLinks = makePaginationLinks(page);
 <BaseLayout>
   <main class="space-y-8">
     <h1>一覧</h1>
+    <CategoryFilter />
     <ul class="grid-container">
       {
         response.contents.map((blog) => (
