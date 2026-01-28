@@ -36,14 +36,6 @@ export const CATEGORY_SLUG_MAP: Record<
 	Go: "go",
 };
 
-// スラッグからカテゴリ名への逆マッピング
-export const SLUG_CATEGORY_MAP: Record<
-	string,
-	(typeof BLOG_CATEGORIES)[number]
-> = Object.fromEntries(
-	Object.entries(CATEGORY_SLUG_MAP).map(([name, slug]) => [slug, name]),
-) as Record<string, (typeof BLOG_CATEGORIES)[number]>;
-
 export const BLOG_CONFIG = {
 	perPage: 10,
 	getAllLimit: 500,
