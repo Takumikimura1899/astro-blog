@@ -14,6 +14,25 @@ type BlogResponse = {
 	contents: Blog[];
 };
 
+// ビルド時のAPI呼び出しを削減するためのキャッシュ
+let allBlogsCache: BlogResponse | null = null;
+
+/**
+ * 全記事をキャッシュ付きで取得
+ * キャッシュには全フィールドを含む記事を保存する（fieldsパラメータは無視される）
+ */
+async function getAllBlogsWithCache(): Promise<BlogResponse> {
+	if (allBlogsCache) {
+		return allBlogsCache;
+	}
+	const res = await getBlogs({
+		limit: BLOG_CONFIG.getAllLimit,
+		orders: "-publishedAt",
+	});
+	allBlogsCache = res;
+	return res;
+}
+
 const client = createClient({
 	serviceDomain: import.meta.env.MICROCMS_SERVICE_DOMAIN,
 	apiKey: import.meta.env.MICROCMS_API_KEY,
@@ -51,12 +70,8 @@ export const getBlogsByCategory = async (
 	const limit = queries?.limit ?? 10;
 	const offset = queries?.offset ?? 0;
 
-	// 全記事を取得（フィルタはJS側で行う）
-	const res = await getBlogs({
-		limit: BLOG_CONFIG.getAllLimit,
-		orders: queries?.orders ?? "-publishedAt",
-		fields: queries?.fields,
-	});
+	// キャッシュを利用して全記事を取得（フィルタはJS側で行う）
+	const res = await getAllBlogsWithCache();
 
 	// カテゴリでフィルタ
 	const filtered = res.contents.filter(
@@ -84,11 +99,8 @@ export const getRelatedBlogs = async (
 	categoryName: string,
 	limit = 3,
 ) => {
-	const res = await getBlogs({
-		limit: BLOG_CONFIG.getAllLimit,
-		orders: "-publishedAt",
-		fields: ["id", "title", "category", "category2", "publishedAt"],
-	});
+	// キャッシュを利用して全記事を取得
+	const res = await getAllBlogsWithCache();
 
 	// カテゴリでフィルタし、現在の記事を除外
 	const filtered = res.contents.filter(
