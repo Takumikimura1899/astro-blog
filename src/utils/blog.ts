@@ -1,4 +1,4 @@
-import { load } from "cheerio";
+import { type CheerioAPI, load } from "cheerio";
 
 export type TocItem = {
 	id: string;
@@ -7,13 +7,13 @@ export type TocItem = {
 };
 
 /**
- * HTML文字列からh2, h3見出しを抽出し、IDを付与したHTMLと目次データを返す
+ * HTML文字列またはCheerioインスタンスからh2, h3見出しを抽出し、IDを付与したHTMLと目次データを返す
  */
-export function extractTableOfContents(html: string): {
+export function extractTableOfContents(input: string | CheerioAPI): {
 	html: string;
 	toc: TocItem[];
 } {
-	const $ = load(html);
+	const $ = typeof input === "string" ? load(input) : input;
 	const toc: TocItem[] = [];
 
 	$("h2, h3").each((index, element) => {

@@ -29,6 +29,9 @@ const relatedBlogs = categoryName
 	? await getRelatedBlogs(blog.id, categoryName, 3)
 	: [];
 
+// 読了時間は元のHTMLから計算（DOM操作前）
+const readingTime = calculateReadingTime(blog.body);
+
 const $ = load(blog.body);
 
 $("div[data-filename]").each((_, element) => {
@@ -52,8 +55,8 @@ $("pre code").each((_, element) => {
 	$(element).addClass("hljs");
 });
 
-const { html: bodyWithIds, toc } = extractTableOfContents($.html());
-const readingTime = calculateReadingTime(blog.body);
+// 目次抽出はcheerioインスタンスを直接渡す（再パース不要）
+const { html: bodyWithIds, toc } = extractTableOfContents($);
 blog.body = bodyWithIds;
 ---
 
