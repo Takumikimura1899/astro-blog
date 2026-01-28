@@ -61,25 +61,25 @@ export async function getStaticPaths() {
 
 const { category: slug, page } = Astro.params;
 const { categoryName, categories } = Astro.props;
+const currentPage = Number.parseInt(page, 10);
 
 const response = await getBlogsByCategory(categoryName, {
 	limit: BLOG_CONFIG.perPage,
-	offset: (Number.parseInt(page, 10) - 1) * BLOG_CONFIG.perPage,
+	offset: (currentPage - 1) * BLOG_CONFIG.perPage,
 	orders: "-publishedAt",
 	fields: ["id", "title", "category", "category2", "publishedAt"],
 });
 
 const totalPages = Math.ceil(response.totalCount / BLOG_CONFIG.perPage);
-const isFirstPage = page === "1";
-const isLastPage = page === totalPages.toString();
+const isFirstPage = currentPage === 1;
+const isLastPage = currentPage === totalPages;
 
-const makePaginationLinks = (currentPage: string) => {
+const makePaginationLinks = () => {
 	const min = 1;
 	const max = totalPages;
-	const currentPageNum = Number.parseInt(currentPage, 10);
 
-	let startPage = Math.max(min, currentPageNum - PAGINATION_OFFSET);
-	let endPage = Math.min(max, currentPageNum + PAGINATION_OFFSET);
+	let startPage = Math.max(min, currentPage - PAGINATION_OFFSET);
+	let endPage = Math.min(max, currentPage + PAGINATION_OFFSET);
 
 	if (startPage === min) {
 		endPage = Math.min(max, min + 2 * PAGINATION_OFFSET);
@@ -90,11 +90,11 @@ const makePaginationLinks = (currentPage: string) => {
 	return Array.from({ length: endPage - startPage + 1 }, (_, i) => ({
 		page: startPage + i,
 		href: `/blogs/category/${slug}/page/${startPage + i}`,
-		isCurrent: startPage + i === currentPageNum,
+		isCurrent: startPage + i === currentPage,
 	}));
 };
 
-const paginationLinks = makePaginationLinks(page);
+const paginationLinks = makePaginationLinks();
 ---
 
 <BaseLayout>
@@ -117,13 +117,13 @@ const paginationLinks = makePaginationLinks(page);
 						!isFirstPage && (
 							<PaginationItem>
 								<PaginationPrevious
-									href={`/blogs/category/${slug}/page/${Number.parseInt(page) - 1}`}
+									href={`/blogs/category/${slug}/page/${currentPage - 1}`}
 								/>
 							</PaginationItem>
 						)
 					}
 					{
-						Number.parseInt(page) - PAGINATION_OFFSET > 1 && (
+						currentPage - PAGINATION_OFFSET > 1 && (
 							<>
 								<PaginationItem>
 									<PaginationLink href={`/blogs/category/${slug}/page/1`}>1</PaginationLink>
@@ -147,7 +147,7 @@ const paginationLinks = makePaginationLinks(page);
 						))
 					}
 					{
-						Number.parseInt(page) + PAGINATION_OFFSET < totalPages && (
+						currentPage + PAGINATION_OFFSET < totalPages && (
 							<>
 								<PaginationItem>
 									<PaginationEllipsis />
@@ -166,7 +166,7 @@ const paginationLinks = makePaginationLinks(page);
 						!isLastPage && (
 							<PaginationItem>
 								<PaginationNext
-									href={`/blogs/category/${slug}/page/${Number.parseInt(page) + 1}`}
+									href={`/blogs/category/${slug}/page/${currentPage + 1}`}
 								/>
 							</PaginationItem>
 						)
