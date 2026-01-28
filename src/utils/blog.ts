@@ -1,4 +1,5 @@
 import { type CheerioAPI, load } from "cheerio";
+import type { Blog } from "@/features/blog/types";
 
 export type TocItem = {
 	id: string;
@@ -39,4 +40,25 @@ export function calculateReadingTime(html: string): number {
 	const charCount = text.replace(/\s/g, "").length;
 	const minutes = Math.ceil(charCount / 500);
 	return Math.max(1, minutes); // 最低1分
+}
+
+/**
+ * ブログ記事のカテゴリごとの記事数を集計する
+ * category と category2 の両方をカウントする
+ */
+export function countBlogsByCategory(
+	blogs: Pick<Blog, "category" | "category2">[],
+): Map<string, number> {
+	const categoryCounts = new Map<string, number>();
+	for (const blog of blogs) {
+		if (blog.category) {
+			const name = blog.category.name;
+			categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
+		}
+		if (blog.category2) {
+			const name = blog.category2.name;
+			categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
+		}
+	}
+	return categoryCounts;
 }

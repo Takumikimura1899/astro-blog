@@ -13,6 +13,7 @@ import {
 import { BLOG_CONFIG, BLOG_CATEGORIES, CATEGORY_SLUG_MAP } from "@/config/blog";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { getBlogs, getBlogsByCategory } from "@/lib/microcms";
+import { countBlogsByCategory } from "@/utils/blog";
 
 const PAGINATION_OFFSET = 2;
 
@@ -26,17 +27,7 @@ export async function getStaticPaths() {
 	});
 
 	// カテゴリごとの記事数を集計
-	const categoryCounts = new Map<string, number>();
-	for (const blog of allBlogs.contents) {
-		if (blog.category) {
-			const name = blog.category.name;
-			categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
-		}
-		if (blog.category2) {
-			const name = blog.category2.name;
-			categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
-		}
-	}
+	const categoryCounts = countBlogsByCategory(allBlogs.contents);
 
 	const allCategories = BLOG_CATEGORIES.map((category) => ({
 		name: category,

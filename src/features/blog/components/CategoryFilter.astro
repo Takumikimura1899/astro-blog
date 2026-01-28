@@ -1,6 +1,7 @@
 ---
 import { BLOG_CATEGORIES, CATEGORY_SLUG_MAP, BLOG_CONFIG } from "@/config/blog";
 import { getBlogs } from "@/lib/microcms";
+import { countBlogsByCategory } from "@/utils/blog";
 
 interface CategoryCount {
 	name: (typeof BLOG_CATEGORIES)[number];
@@ -26,17 +27,7 @@ const categoriesWithCount =
 		});
 
 		// カテゴリごとの記事数を集計
-		const categoryCounts = new Map<string, number>();
-		for (const blog of allBlogs.contents) {
-			if (blog.category) {
-				const name = blog.category.name;
-				categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
-			}
-			if (blog.category2) {
-				const name = blog.category2.name;
-				categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
-			}
-		}
+		const categoryCounts = countBlogsByCategory(allBlogs.contents);
 
 		return BLOG_CATEGORIES.map((category) => ({
 			name: category,
