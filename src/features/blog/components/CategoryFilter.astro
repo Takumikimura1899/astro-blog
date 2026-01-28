@@ -1,6 +1,6 @@
 ---
-import { BLOG_CATEGORIES, CATEGORY_SLUG_MAP } from "@/config/blog";
-import { getBlogCountByCategory } from "@/lib/microcms";
+import { BLOG_CATEGORIES, CATEGORY_SLUG_MAP, BLOG_CONFIG } from "@/config/blog";
+import { getBlogs } from "@/lib/microcms";
 
 interface CategoryCount {
 	name: (typeof BLOG_CATEGORIES)[number];
@@ -18,13 +18,32 @@ const { activeSlug, categories } = Astro.props;
 // categoriesが提供されていない場合のみAPI呼び出し（フォールバック）
 const categoriesWithCount =
 	categories ??
-	(await Promise.all(
-		BLOG_CATEGORIES.map(async (category) => ({
+	(await (async () => {
+		// 全記事を1回だけ取得
+		const allBlogs = await getBlogs({
+			limit: BLOG_CONFIG.getAllLimit,
+			fields: ["id", "category", "category2"],
+		});
+
+		// カテゴリごとの記事数を集計
+		const categoryCounts = new Map<string, number>();
+		for (const blog of allBlogs.contents) {
+			if (blog.category) {
+				const name = blog.category.name;
+				categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
+			}
+			if (blog.category2) {
+				const name = blog.category2.name;
+				categoryCounts.set(name, (categoryCounts.get(name) || 0) + 1);
+			}
+		}
+
+		return BLOG_CATEGORIES.map((category) => ({
 			name: category,
 			slug: CATEGORY_SLUG_MAP[category],
-			count: await getBlogCountByCategory(category),
-		})),
-	));
+			count: categoryCounts.get(category) || 0,
+		}));
+	})());
 
 // 記事があるカテゴリのみ
 const activeCategories = categoriesWithCount.filter((c) => c.count > 0);

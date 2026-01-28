@@ -40,30 +40,9 @@ export const getBlogDetail = async (
 };
 
 /**
- * カテゴリ別の記事数を取得
+ * カテゴリ別の記事を取得
  * microCMSはリレーションフィールドのnameでフィルタできないため、
  * 全記事を取得してJSでフィルタする
- */
-export const getBlogCountByCategory = async (categoryName: string) => {
-	const res = await client.get<BlogResponse>({
-		endpoint: ENDPOINTS.blog,
-		queries: {
-			limit: BLOG_CONFIG.getAllLimit,
-			fields: ["id", "category", "category2"],
-		},
-	});
-
-	const filtered = res.contents.filter(
-		(blog) =>
-			blog.category?.name === categoryName ||
-			blog.category2?.name === categoryName,
-	);
-
-	return filtered.length;
-};
-
-/**
- * カテゴリ別の記事を取得
  */
 export const getBlogsByCategory = async (
 	categoryName: string,
