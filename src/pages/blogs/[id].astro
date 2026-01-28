@@ -1,11 +1,15 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getBlogDetail, getBlogs } from "@/lib/microcms";
+import { getBlogDetail, getBlogs, getRelatedBlogs } from "@/lib/microcms";
 import { formatDate } from "@/utils/date";
+import { extractTableOfContents, calculateReadingTime } from "@/utils/blog";
 import { load } from "cheerio";
 import hljs, { type HighlightResult } from "highlight.js";
 import "highlight.js/styles/a11y-dark.css";
 import CategoryBadge from "@/features/blog/components/CategoryBadge.astro";
+import TableOfContents from "@/features/blog/components/TableOfContents.astro";
+import ReadingTime from "@/features/blog/components/ReadingTime.astro";
+import RelatedArticles from "@/features/blog/components/RelatedArticles.astro";
 import { BLOG_CONFIG } from "@/config/blog";
 
 export async function getStaticPaths() {
@@ -18,6 +22,15 @@ export async function getStaticPaths() {
 
 const { id } = Astro.params;
 const blog = await getBlogDetail(id);
+
+// 関連記事を取得（category または category2 が存在する場合）
+const categoryName = blog.category?.name || blog.category2?.name;
+const relatedBlogs = categoryName
+	? await getRelatedBlogs(blog.id, categoryName, 3)
+	: [];
+
+// 読了時間は元のHTMLから計算（DOM操作前）
+const readingTime = calculateReadingTime(blog.body);
 
 const $ = load(blog.body);
 
@@ -42,30 +55,41 @@ $("pre code").each((_, element) => {
 	$(element).addClass("hljs");
 });
 
-blog.body = $.html();
+// 目次抽出はcheerioインスタンスを直接渡す（再パース不要）
+const { html: bodyWithIds, toc } = extractTableOfContents($);
+blog.body = bodyWithIds;
 ---
 
 <BaseLayout>
-  <main>
-    <h1>{blog.title}</h1>
-    <div class="flex">
-      <div>
-        <div>
-          {blog.category && <CategoryBadge {...blog.category} />}
-          {blog.category2 && <CategoryBadge {...blog.category2} />}
-        </div>
-      </div>
-      <p>公開日時:{formatDate(blog.publishedAt)}</p>
-    </div>
-    <div class="space-y-4 py-12" set:html={blog.body} />
-  </main>
+	<main>
+		<h1>{blog.title}</h1>
+		<div class="meta">
+			<div class="categories">
+				{blog.category && <CategoryBadge {...blog.category} />}
+				{blog.category2 && <CategoryBadge {...blog.category2} />}
+			</div>
+			<div class="info">
+				<p>公開日時:{formatDate(blog.publishedAt)}</p>
+				<ReadingTime minutes={readingTime} />
+			</div>
+		</div>
+		<TableOfContents toc={toc} />
+		<div class="space-y-4 py-12" set:html={blog.body} />
+		<RelatedArticles blogs={relatedBlogs} />
+	</main>
 </BaseLayout>
 
 <style>
-  .flex {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
+	.meta {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	.info {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
 </style>

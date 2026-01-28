@@ -1,5 +1,6 @@
 ---
 import BlogCard from "@/features/blog/components/BlogCard.astro";
+import CategoryFilter from "@/features/blog/components/CategoryFilter.astro";
 import {
 	Pagination,
 	PaginationContent,
@@ -9,21 +10,40 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/shared/components/ui/pagination";
-import { BLOG_CONFIG } from "@/config/blog";
+import { BLOG_CONFIG, BLOG_CATEGORIES, CATEGORY_SLUG_MAP } from "@/config/blog";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { getBlogCount, getBlogs } from "@/lib/microcms";
+import { getBlogs } from "@/lib/microcms";
+import { countBlogsByCategory } from "@/utils/blog";
 
 const PAGINATION_OFFSET = 2;
 
 export async function getStaticPaths() {
-	const totalCount = await getBlogCount();
+	// 全記事を1回だけ取得
+	const allBlogs = await getBlogs({
+		limit: BLOG_CONFIG.getAllLimit,
+		fields: ["id", "category", "category2"],
+	});
+
+	// カテゴリごとの記事数を集計
+	const categoryCounts = countBlogsByCategory(allBlogs.contents);
+
+	const categories = BLOG_CATEGORIES.map((category) => ({
+		name: category,
+		slug: CATEGORY_SLUG_MAP[category],
+		count: categoryCounts.get(category) || 0,
+	}));
+
+	const totalCount = allBlogs.totalCount;
 	const pages = Math.ceil(totalCount / BLOG_CONFIG.perPage);
+
 	return Array.from({ length: pages }, (_, i) => ({
 		params: { page: (i + 1).toString() },
+		props: { categories },
 	}));
 }
 
 const { page } = Astro.params;
+const { categories } = Astro.props;
 
 const response = await getBlogs({
 	limit: BLOG_CONFIG.perPage,
@@ -63,6 +83,7 @@ const paginationLinks = makePaginationLinks(page);
 <BaseLayout>
   <main class="space-y-8">
     <h1>一覧</h1>
+    <CategoryFilter categories={categories} />
     <ul class="grid-container">
       {
         response.contents.map((blog) => (

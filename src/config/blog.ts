@@ -15,6 +15,27 @@ export const BLOG_CATEGORIES = [
 	"Go",
 ] as const;
 
+// カテゴリ名からスラッグへのマッピング
+export const CATEGORY_SLUG_MAP: Record<
+	(typeof BLOG_CATEGORIES)[number],
+	string
+> = {
+	React: "react",
+	Github: "github",
+	Git: "git",
+	JavaScript: "javascript",
+	TypeScript: "typescript",
+	TailwindCSS: "tailwindcss",
+	日記: "diary",
+	"Next.js": "nextjs",
+	"Node.js": "nodejs",
+	"Nest.js": "nestjs",
+	Prisma: "prisma",
+	Docker: "docker",
+	Cloudflare: "cloudflare",
+	Go: "go",
+};
+
 export const BLOG_CONFIG = {
 	perPage: 10,
 	getAllLimit: 500,

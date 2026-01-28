@@ -5,3 +5,5 @@ pre-commit:
     lint:
       glob: "*.{ts,tsx,js,jsx,astro}"
       run: bunx biome check --staged --no-errors-on-unmatched
+    knip:
+      run: bun run knip

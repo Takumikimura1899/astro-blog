@@ -1,0 +1,68 @@
+---
+import { BLOG_CATEGORIES, CATEGORY_SLUG_MAP, BLOG_CONFIG } from "@/config/blog";
+import { getBlogs } from "@/lib/microcms";
+import { countBlogsByCategory } from "@/utils/blog";
+
+interface CategoryCount {
+	name: (typeof BLOG_CATEGORIES)[number];
+	slug: string;
+	count: number;
+}
+
+interface Props {
+	activeSlug?: string;
+	categories?: CategoryCount[];
+}
+
+const { activeSlug, categories } = Astro.props;
+
+// categoriesが提供されていない場合のみAPI呼び出し（フォールバック）
+const categoriesWithCount =
+	categories ??
+	(await (async () => {
+		// 全記事を1回だけ取得
+		const allBlogs = await getBlogs({
+			limit: BLOG_CONFIG.getAllLimit,
+			fields: ["id", "category", "category2"],
+		});
+
+		// カテゴリごとの記事数を集計
+		const categoryCounts = countBlogsByCategory(allBlogs.contents);
+
+		return BLOG_CATEGORIES.map((category) => ({
+			name: category,
+			slug: CATEGORY_SLUG_MAP[category],
+			count: categoryCounts.get(category) || 0,
+		}));
+	})());
+
+// 記事があるカテゴリのみ
+const activeCategories = categoriesWithCount.filter((c) => c.count > 0);
+
+// スタイルクラスを変数に抽出
+const baseClasses =
+	"py-2 px-4 rounded-full text-sm no-underline transition-all";
+const activeClasses =
+	"bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900";
+const inactiveClasses =
+	"bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700";
+---
+
+<nav aria-label="カテゴリフィルタ" class="flex flex-wrap gap-2 mb-8">
+	<a
+		href="/blogs/page/1"
+		class:list={[baseClasses, !activeSlug ? activeClasses : inactiveClasses]}
+	>
+		すべて
+	</a>
+	{
+		activeCategories.map((category) => (
+			<a
+				href={`/blogs/category/${category.slug}/page/1`}
+				class:list={[baseClasses, activeSlug === category.slug ? activeClasses : inactiveClasses]}
+			>
+				{category.name}
+			</a>
+		))
+	}
+</nav>

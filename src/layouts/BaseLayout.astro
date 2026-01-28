@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import BaseHead from "@/shared/components/layout/BaseHead.astro";
 import Footer from "@/shared/components/layout/Footer.astro";
 import Header from "@/shared/components/layout/Header.astro";
@@ -21,6 +22,38 @@ const {
 <html lang="ja">
   <head>
     <BaseHead title={title} description={description} image={image} />
+    <ClientRouter />
+    <script is:inline>
+      // テーマ取得関数
+      function getThemePreference() {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      // 初回読み込み時にテーマを適用
+      const isDark = getThemePreference() === 'dark';
+      document.documentElement.classList.toggle('dark', isDark);
+
+      // View Transitions: ページスワップ前に新しいドキュメントにテーマを適用
+      document.addEventListener('astro:before-swap', (event) => {
+        const isDark = getThemePreference() === 'dark';
+        event.newDocument.documentElement.classList.toggle('dark', isDark);
+      });
+
+      // テーマ変更の監視とlocalStorage保存
+      if (typeof localStorage !== 'undefined') {
+        const observer = new MutationObserver(() => {
+          const isDark = document.documentElement.classList.contains('dark');
+          localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+        observer.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+      }
+    </script>
   </head>
   <body>
     <Header />
@@ -28,31 +61,5 @@ const {
       <slot />
     </div>
     <Footer />
-    <script is:inline>
-      const getThemePreference = () => {
-        if (
-          typeof localStorage !== 'undefined' &&
-          localStorage.getItem('theme')
-        ) {
-          return localStorage.getItem('theme')
-        }
-        return window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light'
-      }
-      const isDark = getThemePreference() === 'dark'
-      document.documentElement.classList[isDark ? 'add' : 'remove']('dark')
-
-      if (typeof localStorage !== 'undefined') {
-        const observer = new MutationObserver(() => {
-          const isDark = document.documentElement.classList.contains('dark')
-          localStorage.setItem('theme', isDark ? 'dark' : 'light')
-        })
-        observer.observe(document.documentElement, {
-          attributes: true,
-          attributeFilter: ['class'],
-        })
-      }
-    </script>
   </body>
 </html>
