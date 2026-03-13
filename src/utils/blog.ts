@@ -20,7 +20,8 @@ export function extractTableOfContents(input: string | CheerioAPI): {
 	$("h2, h3").each((index, element) => {
 		const $el = $(element);
 		const text = $el.text();
-		const level = element.tagName === "h2" ? 2 : 3;
+		const tagName = ("tagName" in element && element.tagName) || "";
+		const level = tagName === "h2" ? 2 : 3;
 		const id = `heading-${index}`;
 
 		$el.attr("id", id);
