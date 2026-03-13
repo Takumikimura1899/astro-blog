@@ -4,8 +4,7 @@ import { getBlogDetail, getBlogs, getRelatedBlogs } from "@/lib/microcms";
 import { formatDate } from "@/utils/date";
 import { extractTableOfContents, calculateReadingTime } from "@/utils/blog";
 import { load } from "cheerio";
-import hljs, { type HighlightResult } from "highlight.js";
-import "highlight.js/styles/a11y-dark.css";
+import { getShikiHighlighter } from "@/lib/shiki";
 import CategoryBadge from "@/features/blog/components/CategoryBadge.astro";
 import TableOfContents from "@/features/blog/components/TableOfContents.astro";
 import ReadingTime from "@/features/blog/components/ReadingTime.astro";
@@ -34,25 +33,30 @@ const readingTime = calculateReadingTime(blog.body);
 
 const $ = load(blog.body);
 
+const highlighter = await getShikiHighlighter();
+
+// data-filename処理（変更なし、Shikiの前に実行）
 $("div[data-filename]").each((_, element) => {
 	$(element).prepend(`<span>${$(element).attr("data-filename")}</span>`);
 });
 
+// Shikiによるハイライト
 $("pre code").each((_, element) => {
-	const language = $(element).attr("class") || "";
-	let result: HighlightResult;
+	const classAttr = $(element).attr("class") || "";
+	const langMatch = classAttr.match(/language-(\S+)/);
+	const lang = langMatch ? langMatch[1] : "text";
 
-	if (language === "") {
-		// 言語が入力なしの場合、自動判定
-		result = hljs.highlightAuto($(element).text());
-	} else {
-		// 言語が入力ありの場合、入力された言語で判定
-		result = hljs.highlight($(element).text(), {
-			language: language.replace("language-", ""),
-		});
+	const code = $(element).text();
+	let html: string;
+	try {
+		html = highlighter.codeToHtml(code, { lang, theme: "github-dark" });
+	} catch {
+		// 未対応言語はプレーンテキストにフォールバック
+		html = highlighter.codeToHtml(code, { lang: "text", theme: "github-dark" });
 	}
-	$(element).html(result.value);
-	$(element).addClass("hljs");
+
+	// codeToHtml は <pre><code>...</code></pre> 全体を生成するため、親の pre を置換
+	$(element).parent("pre").replaceWith(html);
 });
 
 // 目次抽出はcheerioインスタンスを直接渡す（再パース不要）

@@ -257,3 +257,18 @@ code {
   margin: 0 0.2rem;
   border-radius: 0.25rem;
 }
+
+/* Shiki が生成する pre 内の code はShikiのスタイルを優先 */
+pre.shiki code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+pre.shiki {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
