@@ -1,10 +1,10 @@
 import { createHighlighter, type Highlighter } from "shiki";
 
-let highlighter: Highlighter | null = null;
+let highlighterPromise: Promise<Highlighter> | null = null;
 
-export async function getShikiHighlighter(): Promise<Highlighter> {
-	if (!highlighter) {
-		highlighter = await createHighlighter({
+export function getShikiHighlighter(): Promise<Highlighter> {
+	if (!highlighterPromise) {
+		highlighterPromise = createHighlighter({
 			themes: ["github-dark"],
 			langs: [
 				"text",
@@ -29,5 +29,5 @@ export async function getShikiHighlighter(): Promise<Highlighter> {
 			],
 		});
 	}
-	return highlighter;
+	return highlighterPromise;
 }
