@@ -1,3 +1,4 @@
+import { MICROCMS_API_KEY, MICROCMS_SERVICE_DOMAIN } from "astro:env/server";
 import type { MicroCMSQueries } from "microcms-js-sdk";
 import { createClient } from "microcms-js-sdk";
 import { BLOG_CONFIG } from "@/config/blog";
@@ -34,8 +35,8 @@ async function getAllBlogsWithCache(): Promise<BlogResponse> {
 }
 
 const client = createClient({
-	serviceDomain: process.env.MICROCMS_SERVICE_DOMAIN ?? "",
-	apiKey: process.env.MICROCMS_API_KEY ?? "",
+	serviceDomain: MICROCMS_SERVICE_DOMAIN,
+	apiKey: MICROCMS_API_KEY,
 });
 
 export const getBlogs = async (queries?: MicroCMSQueries) => {
